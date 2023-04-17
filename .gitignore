@@ -17,9 +17,9 @@ yarn-error.log
 /.vscode
 /.history
 .history/*
-/public/css/*
-/public/js/*
-/public/uploads/*
+# /public/css/*
+# /public/js/*
+# /public/uploads/*
 /Modules/*
 !/Modules
 .DS_Store
