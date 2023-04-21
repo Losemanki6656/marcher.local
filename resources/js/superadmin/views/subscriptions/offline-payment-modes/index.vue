@@ -1,7 +1,7 @@
 <template>
     <SuperAdminPageHeader>
         <template #header>
-            <a-page-header :title="$t(`menu.offline_payment_mode`)" class="p-0">
+            <a-page-header :title="$t(`menu.offline_payment_modes`)" class="p-0">
                 <template #extra>
                     <a-button type="primary" @click="addItem">
                         <PlusOutlined />

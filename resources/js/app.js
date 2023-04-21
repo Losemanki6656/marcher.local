@@ -11,6 +11,11 @@ import { setupI18n, loadLocaleMessages } from './common/i18n';
 import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css';
 import VueBarcode from '@chenfengyuan/vue-barcode';
 import print from 'vue3-print-nb';
+import {VueRestrictedInputDirective} from 'vue-restricted-input';
+
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+// import VueSimpleAlert from "vue-simple-alert";
 
 async function bootstrap() {
     if (store.getters["auth/isLoggedIn"]) {
@@ -37,6 +42,8 @@ async function bootstrap() {
     app.use(PerfectScrollbar)
     app.use(store);
     app.use(print);
+    app.use(VueSweetalert2);
+    // app.use(VueSimpleAlert);
 
     app.component(VueBarcode.name, VueBarcode);
 
@@ -50,7 +57,7 @@ async function bootstrap() {
 
     // Adding routes after plugins routes
     app.use(routes);
-
+    app.directive('mask', VueRestrictedInputDirective);
     window.i18n = i18n;
 
     routes.isReady().then(() => {

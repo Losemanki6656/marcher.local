@@ -52,6 +52,11 @@ class PaymentTranscation extends BaseModel
         return $query->where('payment_method', 'paypal');
     }
 
+    public function scopePaymo($query)
+    {
+        return $query->where('payment_method', 'paymo');
+    }
+
     public function scopeStripe($query)
     {
         return $query->where('payment_method', 'stripe');

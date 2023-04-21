@@ -30,6 +30,17 @@
                     {{ $t("menu.offline_payment_modes") }}
                 </a-menu-item>
 
+                <a-menu-item
+                    key="paymo"
+                    @click="
+                        $router.push({
+                            name: 'superadmin.payment_settings.paymo.index',
+                        })
+                    "
+                >
+                    {{ $t("menu.paymo") }}
+                </a-menu-item>
+
                 <!-- <a-menu-item
 					key="paypal"
 					@click="
@@ -38,14 +49,14 @@
 				>
 					{{ $t("menu.paypal") }}
 				</a-menu-item> -->
-                <a-menu-item
-                    key="stripe"
+                <!-- <a-menu-item
+                    key="paymo"
                     @click="
-                        $router.push({ name: 'superadmin.payment_settings.stripe.index' })
+                        $router.push({ name: 'superadmin.payment_settings.paymo.index' })
                     "
-                >
-                    {{ $t("menu.stripe") }}
-                </a-menu-item>
+                    >
+                    {{ $t("menu.paymo") }}
+                </a-menu-item> -->
                 <!-- <a-menu-item
 					key="razorpay"
 					@click="

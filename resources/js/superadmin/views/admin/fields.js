@@ -1,7 +1,7 @@
 import { useI18n } from "vue-i18n";
 
 const fields = () => {
-    const url = "subscription-transcations?fields=id,xid,paid_on,transcation_id,next_payment_date,payment_method,subscription_plan_id,x_subscription_plan_id,subscriptionPlan{id,xid,name}";
+    const url = "subscription-transcations?fields=id,xid,paid_on,transcation_id,next_payment_date,payment_method,subscription_plan_id,x_subscription_plan_id,total,subscriptionPlan{id,xid,name}";
     const { t } = useI18n();
 
     const columns = [
@@ -24,6 +24,10 @@ const fields = () => {
         {
             title: t("payment_transaction.payment_method"),
             dataIndex: "payment_method",
+        },
+        {
+            title: t("payment_transaction.total"),
+            dataIndex: "total",
         },
         {
             title: t("common.action"),

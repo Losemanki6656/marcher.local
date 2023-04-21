@@ -657,6 +657,22 @@ class SuperAdminCommon
             $stripe->status = 1; // Also Remove this
             $stripe->save();
 
+            // Stripe
+            $paymo = new GlobalSettings();
+            $paymo->is_global = 1;
+            $paymo->company_id = $company->id;
+            $paymo->setting_type = 'payment_settings';
+            $paymo->name = 'Paymo Payment Settings';
+            $paymo->name_key = 'paymo';
+            $paymo->credentials = [
+                'paymo_api_key' => '',
+                'paymo_api_secret' => '',
+                // 'paymo_webhook_key' => '',
+                'paymo_status' => 'active',
+            ];
+            $paymo->status = 1; // Also Remove this
+            $paymo->save();
+
             // Razorpay
             $razorpay = new GlobalSettings();
             $razorpay->is_global = 1;
@@ -792,6 +808,31 @@ class SuperAdminCommon
 
 
         return $allPaymentMethods;
+    }
+
+    public static function getAppPaymoSettings($showType = 'limited')
+    {
+        $allPaymentMethods = GlobalSettings::withoutGlobalScope(CompanyScope::class)->where('setting_type', 'payment_settings')
+            ->where('status', 1)
+            ->get();
+
+        if ($showType == 'limited') {
+            foreach ($allPaymentMethods as $allPaymentMethod) {
+           
+                if ($allPaymentMethod->name_key == 'paymo') {
+                    $allPaymentMethod->credentials = [
+                        'paymo_api_key' => $allPaymentMethod->credentials['paymo_api_key'],
+                        'paymo_api_secret' => $allPaymentMethod->credentials['paymo_api_secret'],
+                        'paymo_status' => $allPaymentMethod->credentials['paymo_status'],
+                    ];
+                    return $allPaymentMethod->credentials;
+                } 
+        
+            }
+        }
+
+
+        return false;
     }
 
     public static function createSuperAdmin($resetAdminCompany = false)

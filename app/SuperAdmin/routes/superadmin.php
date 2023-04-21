@@ -23,6 +23,10 @@ ApiRoute::group(['namespace' => 'App\SuperAdmin\Http\Controllers\Api\Admin', 'mi
     // Stripe
     ApiRoute::post('stripe-payment', ['as' => 'api.extra.stripe.payment', 'uses' => 'AdminStripeController@stripePayment']);
 
+    
+    // Paymo
+    ApiRoute::post('paymo-payment', ['as' => 'api.extra.paymo.payment', 'uses' => 'AdminPaymoController@paymoPayment']);
+
     ApiRoute::get('all-payment-methods', ['as' => 'api.extra.subscription-plan.payment-methods', 'uses' => 'AdminSubscriptionController@allPaymentMethodSettings']);
     ApiRoute::get('all-subscription-plans', ['as' => 'api.extra.subscription-plan.all', 'uses' => 'AdminSubscriptionController@allSubscriptionPlans']);
     ApiRoute::get('subscription-plan-details', ['as' => 'api.extra.subscription-plan.details', 'uses' => 'AdminSubscriptionController@subscribePlanDetails']);
@@ -78,6 +82,10 @@ ApiRoute::group(['namespace' => 'App\SuperAdmin\Http\Controllers\Api', 'prefix' 
         ApiRoute::get('paypal', ['as' => 'api.payment-settings.paypal.index', 'uses' => 'PaymentSettingsController@getPaypal']);
         ApiRoute::post('stripe/update', ['as' => 'api.payment-settings.stripe.update', 'uses' => 'PaymentSettingsController@updateStripe']);
         ApiRoute::get('stripe', ['as' => 'api.payment-settings.stripe.index', 'uses' => 'PaymentSettingsController@getStripe']);
+
+        ApiRoute::get('paymo', ['as' => 'api.payment-settings.paymo.index', 'uses' => 'PaymentSettingsController@getPaymo']);
+        ApiRoute::post('paymo/update', ['as' => 'api.payment-settings.paymo.update', 'uses' => 'PaymentSettingsController@updatePaymo']);
+        
         ApiRoute::post('razorpay/update', ['as' => 'api.payment-settings.razorpay.update', 'uses' => 'PaymentSettingsController@updateRazorpay']);
         ApiRoute::get('razorpay', ['as' => 'api.payment-settings.razorpay.index', 'uses' => 'PaymentSettingsController@getRazorpay']);
         ApiRoute::post('paystack/update', ['as' => 'api.payment-settings.paystack.update', 'uses' => 'PaymentSettingsController@updatePaystack']);

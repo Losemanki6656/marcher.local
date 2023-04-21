@@ -86,6 +86,10 @@
                                         {{ record.subscription_plan.name }}
                                     </template>
 
+                                    <template v-if="column.dataIndex === 'total'">
+                                        {{ record.total }}
+                                    </template>
+
                                     <template v-if="column.dataIndex === 'action'">
                                         -
                                     </template>

@@ -72,6 +72,10 @@
                                 {{ formatDate(record.next_payment_date) }}
                             </template>
 
+                            <template v-if="column.dataIndex === 'total'">
+                                {{ record.total }}
+                            </template>
+
                             <template v-if="column.dataIndex === 'name'">
                                 {{ record.name }}
                             </template>

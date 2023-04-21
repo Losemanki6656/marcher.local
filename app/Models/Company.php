@@ -57,7 +57,7 @@ class Company extends BaseModel
         parent::boot();
 
         static::addGlobalScope('company', function (Builder $builder) {
-            $builder->where('companies.is_global', 0);
+            $builder->where('companies.is_global', 1);
         });
     }
 

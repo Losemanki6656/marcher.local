@@ -1,7 +1,7 @@
 import { useI18n } from "vue-i18n";
 
 const fields = () => {
-    const url = "superadmin/payment-transcations?fields=id,xid,paid_on,transcation_id,company_id,x_company_id,company{id,xid,name},next_payment_date,payment_method";
+    const url = "superadmin/payment-transcations?fields=id,xid,paid_on,transcation_id,company_id,x_company_id,company{id,xid,name},next_payment_date,total,payment_method";
     const { t } = useI18n();
 
     const columns = [
@@ -24,6 +24,10 @@ const fields = () => {
         {
             title: t("payment_transaction.payment_method"),
             dataIndex: "payment_method",
+        },
+        {
+            title: t("payment_transaction.total"),
+            dataIndex: "total",
         },
         {
             title: t("common.action"),
