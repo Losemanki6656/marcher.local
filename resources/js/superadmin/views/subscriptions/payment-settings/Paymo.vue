@@ -34,6 +34,7 @@
 		<a-col :xs="24" :sm="24" :md="24" :lg="20" :xl="20">
 			<a-card class="page-content-container">
 				<a-form layout="vertical">
+					
 					<a-row :gutter="16">
 						<a-col :xs="24" :sm="24" :md="12" :lg="12">
 							<a-form-item
@@ -81,26 +82,24 @@
 						</a-col>
 					</a-row>
 
-					<!-- <a-row :gutter="16">
+					<a-row :gutter="16">
 						<a-col :xs="24" :sm="24" :md="12" :lg="12">
 							<a-form-item
-								:label="$t('payment_settings.stripe_webhook_key')"
-								name="stripe_webhook_key"
+								:label="$t('payment_settings.paymo_store_id')"
+								name="paymo_api_key"
 								:help="
-									rules.stripe_webhook_key
-										? rules.stripe_webhook_key.message
+									rules.paymo_store_id
+										? rules.paymo_store_id.message
 										: null
 								"
-								:validateStatus="
-									rules.stripe_webhook_key ? 'error' : null
-								"
+								:validateStatus="rules.paymo_store_id ? 'error' : null"
 								class="required"
 							>
 								<a-input
-									v-model:value="formData.stripe_webhook_key"
+									v-model:value="formData.paymo_store_id"
 									:placeholder="
 										$t('common.placeholder_default_text', [
-											$t('payment_settings.stripe_webhook_key'),
+											$t('payment_settings.paymo_store_id'),
 										])
 									"
 								/>
@@ -108,19 +107,27 @@
 						</a-col>
 						<a-col :xs="24" :sm="24" :md="12" :lg="12">
 							<a-form-item
-								:label="$t('payment_settings.webhook_url')"
-								name="webhook_url"
+								:label="$t('payment_settings.paymo_terminal_id')"
+								name="paymo_terminal_id"
+								:help="
+									rules.paymo_terminal_id
+										? rules.paymo_terminal_id.message
+										: null
+								"
+								:validateStatus="rules.paymo_terminal_id ? 'error' : null"
+								class="required"
 							>
-								<a-typography-text type="success">
-									{{ webhookUrl }}
-								</a-typography-text>
-								<br />
-								<small class="small-text-message">
-									{{ $t("payment_settings.stripe_webhook_message") }}
-								</small>
+								<a-input
+									v-model:value="formData.paymo_terminal_id"
+									:placeholder="
+										$t('common.placeholder_default_text', [
+											$t('payment_settings.paymo_terminal_id'),
+										])
+									"
+								/>
 							</a-form-item>
 						</a-col>
-					</a-row> -->
+					</a-row>
 
 					<a-row :gutter="16">
 						<a-col :xs="24" :sm="24" :md="12" :lg="12">

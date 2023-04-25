@@ -27,7 +27,8 @@ class PaymoUpdateRequest extends FormRequest
 		$rules = [
 			'paymo_api_key'    => 'required',
 			'paymo_api_secret'    => 'required',
-			// 'stripe_webhook_key'    => 'required',
+			'paymo_store_id'    => 'required',
+			'paymo_terminal_id'    => 'required',
 			'paymo_status'    => 'required',
 		];
 

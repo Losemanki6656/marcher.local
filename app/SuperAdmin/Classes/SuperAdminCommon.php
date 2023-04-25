@@ -823,6 +823,8 @@ class SuperAdminCommon
                     $allPaymentMethod->credentials = [
                         'paymo_api_key' => $allPaymentMethod->credentials['paymo_api_key'],
                         'paymo_api_secret' => $allPaymentMethod->credentials['paymo_api_secret'],
+                        'paymo_store_id' => $allPaymentMethod->credentials['paymo_store_id'],
+                        'paymo_terminal_id' => $allPaymentMethod->credentials['paymo_terminal_id'],
                         'paymo_status' => $allPaymentMethod->credentials['paymo_status'],
                     ];
                     return $allPaymentMethod->credentials;

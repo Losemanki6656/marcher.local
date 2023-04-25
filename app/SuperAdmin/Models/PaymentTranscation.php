@@ -7,6 +7,7 @@ use App\Models\BaseModel;
 use App\Models\Company;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
+use App\Models\BindedCard;
 use App\Scopes\CompanyScope;
 
 class PaymentTranscation extends BaseModel
@@ -29,6 +30,7 @@ class PaymentTranscation extends BaseModel
     protected $casts = [
         'response_data' => 'array',
         'is_offline_request' => 'integer',
+        'next_payment_date' => 'date'
     ];
 
     protected $filterable = ['status', 'company_id', 'subscription_plan_id', 'offline_payment_mode_id'];
@@ -94,7 +96,7 @@ class PaymentTranscation extends BaseModel
     {
         return $query->where(function ($query) {
             $query->where('payment_method', '!=', 'offline');
-        })
+            })
             ->orWhere(function ($query) {
                 $query->where('payment_method', 'offline')
                     ->where('status', 'approved');
@@ -109,6 +111,11 @@ class PaymentTranscation extends BaseModel
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function bindedCard()
+    {
+        return $this->belongsTo(BindedCard::class);
     }
 
     public function subscriptionPlan()

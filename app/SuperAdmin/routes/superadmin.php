@@ -26,6 +26,8 @@ ApiRoute::group(['namespace' => 'App\SuperAdmin\Http\Controllers\Api\Admin', 'mi
     
     // Paymo
     ApiRoute::post('paymo-payment', ['as' => 'api.extra.paymo.payment', 'uses' => 'AdminPaymoController@paymoPayment']);
+    ApiRoute::post('bind-card', ['as' => 'api.extra.paymo.bind-card', 'uses' => 'AdminPaymoController@bindCard']);
+    ApiRoute::post('confirm-paymo', ['as' => 'api.extra.paymo.confirm-paymo', 'uses' => 'AdminPaymoController@confirmPaymo']);
 
     ApiRoute::get('all-payment-methods', ['as' => 'api.extra.subscription-plan.payment-methods', 'uses' => 'AdminSubscriptionController@allPaymentMethodSettings']);
     ApiRoute::get('all-subscription-plans', ['as' => 'api.extra.subscription-plan.all', 'uses' => 'AdminSubscriptionController@allSubscriptionPlans']);

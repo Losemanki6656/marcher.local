@@ -115,7 +115,8 @@ class PaymentSettingsController extends ApiBaseController
         $settingData = [
             'paymo_api_key' => $settings->credentials['paymo_api_key'],
             'paymo_api_secret' => $settings->credentials['paymo_api_secret'],
-            // 'stripe_webhook_key' => $settings->credentials['stripe_webhook_key'],
+            'paymo_store_id' => $settings->credentials['paymo_store_id'],
+            'paymo_terminal_id' => $settings->credentials['paymo_terminal_id'],
             'paymo_status' => $settings->credentials['paymo_status'],
         ];
 
@@ -134,7 +135,8 @@ class PaymentSettingsController extends ApiBaseController
         $settingData = [
             'paymo_api_key' => $request->paymo_api_key,
             'paymo_api_secret' => $request->paymo_api_secret,
-            // 'stripe_webhook_key' => $request->stripe_webhook_key,
+            'paymo_store_id' => $request->paymo_store_id,
+            'paymo_terminal_id' => $request->paymo_terminal_id,
             'paymo_status' => $request->paymo_status,
         ];
 
