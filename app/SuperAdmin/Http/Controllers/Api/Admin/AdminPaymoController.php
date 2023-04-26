@@ -61,7 +61,17 @@ class AdminPaymoController  extends ApiBaseController
 
         $expirationDate = $expiries[1] . $expiries[0];
 
-        $paymoBindCard = $this->AtmosBindCard($paymoToken, $cardNum, $expirationDate);
+        // $paymoBindCard = $this->AtmosBindCard($paymoToken, $cardNum, $expirationDate);
+
+        $paymoBindCard = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer '. $paymoToken
+        ])->post('https://partner.atmos.uz/partner/bind-card/create', [
+            "card_number" =>  $cardNum,
+            "expiry" => $expirationDate
+        ]);
+
+        $paymoBindCard = json_decode($paymoBindCard->body(), true);
         
         try {
                 if ( $paymoBindCard['result']['code'] == "STPIMS-ERR-133" ) {
@@ -76,6 +86,8 @@ class AdminPaymoController  extends ApiBaseController
                         "store_id" => $methodPaymo['paymo_store_id'],
                         "lang" => "ru"
                     ]);
+                    
+                    $response = json_decode($response->body(), true);
 
                    if($response['result']['code'] == "OK" ) {
 
@@ -87,6 +99,8 @@ class AdminPaymoController  extends ApiBaseController
                             "store_id" =>  $methodPaymo['paymo_store_id'],
                             "transaction_id" => $response['transaction_id'],
                         ]);
+                        
+                        $res = json_decode($res->body(), true);
 
                         if($res['result']['code'] == "OK" ) {
 
@@ -211,6 +225,8 @@ class AdminPaymoController  extends ApiBaseController
                 "store_id" =>  $methodPaymo['paymo_store_id'],
             ]);
 
+            $response = json_decode($response->body(), true);
+
             if($response['result']['code'] == "OK" ) { 
                
                 $amount = 0;
@@ -236,7 +252,7 @@ class AdminPaymoController  extends ApiBaseController
                 $offlineRequest->paid_on = now();
                 if($planType == "annual") $offlineRequest->next_payment_date = date('Y-m-d', strtotime($next_Date->addYear()));
                 if($planType == "monthly") $offlineRequest->next_payment_date = date('Y-m-d', strtotime($next_Date->addMonth()));
-                $offlineRequest->response_data = $response->body();
+                $offlineRequest->response_data = $response;
                 $offlineRequest->save();
 
                 $company = Company::find(company()->id);
@@ -311,6 +327,8 @@ class AdminPaymoController  extends ApiBaseController
                 "transaction_id" =>  $request->transaction_id,
                 "otp" => $request->verification_code
             ]);
+
+            $respon = json_decode($respon->body(), true);
 
             if($respon['result']['code'] == "OK")
             {
@@ -421,6 +439,8 @@ class AdminPaymoController  extends ApiBaseController
                     $password
                 ]
             ]);
+
+            // $response = json_decode($response->body(), true);
 
             $info = json_decode($response->getBody()->getContents(), true); 
 
