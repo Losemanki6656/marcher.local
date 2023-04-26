@@ -35,8 +35,7 @@ const getJSONFromLocalStorage = (key) => {
 
 const getDefaultLangKey = () => {
     var defaultLangKey = window.config.defaultLangKey;
-
-    return defaultLangKey ? defaultLangKey : "en";
+    return defaultLangKey ? defaultLangKey : "Rus";
 }
 
 export default {

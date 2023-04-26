@@ -198,6 +198,7 @@ export default {
 		});
 
 		const getData = () => {
+
 			axiosAdmin.get("lang-trans").then((res) => {
 				apiResponse.value = res.data.data;
 				setLangsLocaleMessage(res, i18n, selectedLang.value);

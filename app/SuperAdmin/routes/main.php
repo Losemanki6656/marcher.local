@@ -22,7 +22,7 @@ Route::get('{path}', function () {
         $appVersion = File::get('superadmin_version.txt');
         $appVersion = preg_replace("/\r|\n/", "", $appVersion);
         $globalCompanyLang = DB::table('companies')->select('lang_id')->where('is_global', 1)->first();
-        $lang = $globalCompanyLang && $globalCompanyLang->lang_id && $globalCompanyLang->lang_id != null ? Lang::find($globalCompanyLang->lang_id) : Lang::first();
+        $lang = $globalCompanyLang && $globalCompanyLang->lang_id && $globalCompanyLang->lang_id != null ? Lang::find($globalCompanyLang->lang_id) : Lang::find(2);
         $loadingLangMessageLang = Translation::where('key', 'loading_app_message')
             ->where('group', 'messages')
             ->where('lang_id', $lang->id)

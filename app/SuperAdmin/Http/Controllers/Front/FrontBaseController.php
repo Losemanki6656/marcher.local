@@ -33,6 +33,9 @@ class FrontBaseController extends Controller
 
     public function __construct()
     {
+        if( session('front_lang_key') == null )
+             session(['front_lang_key' => 'Rus']);
+
         $this->middleware(function ($request, $next) {
             $this->langKey = front_lang_key();
             $this->selectedLang = Lang::where('key', $this->langKey)->first();
@@ -42,6 +45,7 @@ class FrontBaseController extends Controller
             $frontSettings = GlobalSettings::where('setting_type', 'website_settings')
                 ->where('name_key', $this->langKey)
                 ->first();
+
             $settings = $frontSettings->credentials;
             $this->frontSetting = (object) $settings;
 

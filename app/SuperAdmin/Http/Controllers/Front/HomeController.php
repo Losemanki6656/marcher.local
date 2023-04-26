@@ -39,6 +39,10 @@ class HomeController extends FrontBaseController
 
     public function index($slug = null)
     {
+        // dd(session('front_lang_key'));
+
+        // session(['front_lang_key' => 'en']);
+
         $this->seoDetail = $this->getPageSeoDetails('home');
 
         // Header Features

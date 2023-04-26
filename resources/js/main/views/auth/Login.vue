@@ -95,12 +95,13 @@
 </template>
 
 <script>
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, reactive, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import common from "../../../common/composable/common";
 import apiAdmin from "../../../common/composable/apiAdmin";
 import DemoCredentials from "./DemoCredentials.vue";
+// import { setLangsLocaleMessage } from "../../../../../common/i18n";
 
 export default defineComponent({
     components: {
@@ -112,6 +113,7 @@ export default defineComponent({
         const loginBackground = globalSetting.value.login_image_url;
         const store = useStore();
         const router = useRouter();
+		const selectedLang = computed(() => store.state.auth.lang);
         const credentials = reactive({
             email: null,
             password: null,
@@ -126,6 +128,16 @@ export default defineComponent({
                 error: "",
                 success: false,
             };
+
+            // if( !window.localStorage.getItem('selected_lang') )
+            // {
+            //     axiosAdmin.get("lang-trans").then((res) => {
+            //         apiResponse.value = res.data.data;
+            //         setLangsLocaleMessage(res, i18n, selectedLang.value);
+            //         updateTableData();
+            //     });
+            // }
+            // window.localStorage.setItem('selected_lang','Rus');
 
             addEditRequestAdmin({
                 url: "auth/login",
