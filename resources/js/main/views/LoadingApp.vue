@@ -2,9 +2,9 @@
     <div class="loading-app-container">
         <a-result>
             <template #title>
-                <span :style="{ color: '#7676e3' }">
+                <!-- <span :style="{ color: '#7676e3' }">
                     {{ $t("messages.loading_app_message") }}
-                </span>
+                </span> -->
             </template>
             <template #icon>
                 <img style="width: 150px" :src="appSetting.light_logo_url" />
