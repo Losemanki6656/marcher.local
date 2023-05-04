@@ -65,7 +65,7 @@ class AdminPaymoController  extends ApiBaseController
                 'Accept' => 'application/json',
                 'Authorization' => 'Bearer '. $paymoToken
             ])->post('https://partner.atmos.uz/merchant/pay/create', [
-                "amount" => (int)$amount,
+                "amount" => $amount * 100,
                 "account" => $loggedInUser->id,
                 "terminal_id" => $methodPaymo['paymo_terminal_id'],
                 "store_id" => $methodPaymo['paymo_store_id'],

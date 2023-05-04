@@ -90,8 +90,8 @@
                                         {{ record.total }}
                                     </template>
 
-                                    <template v-if="column.dataIndex === 'action'">
-                                        -
+                                    <template v-if="column.dataIndex === 'card_num'">
+                                        {{ record.card_num }}
                                     </template>
                                 </template>
                             </a-table>

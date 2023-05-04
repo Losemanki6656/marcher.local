@@ -184,6 +184,7 @@ class SuperAdminLangTrans
             'company' => 'Company',
             'transcation_id' => 'Transcation ID',
             'amount' => 'Amount',
+            'card_num' => 'Card Number',
             'next_payment_date' => 'Next Payment Date',
             'payment_method' => 'Payment Method',
             'license_expires_on' => 'License Will Expires On',
