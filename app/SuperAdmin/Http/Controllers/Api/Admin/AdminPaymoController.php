@@ -193,6 +193,8 @@ class AdminPaymoController  extends ApiBaseController
 
         try {
 
+            $cardNum = $this->replace($request->cardNumber);
+
             $response = Http::withHeaders([
                 'Accept' => 'application/json',
                 'Authorization' => 'Bearer '. $paymoToken
@@ -222,7 +224,7 @@ class AdminPaymoController  extends ApiBaseController
                 $offlineRequest->company_id = $loggedUserCompany->id;
                 $offlineRequest->subscription_plan_id = $planId;
                 $offlineRequest->plan_type = $request->plan_type;
-                $offlineRequest->card_num = substr($request->cardNumber, 0, 4) . ' **** **** ' . substr($request->cardNumber, 12, 4);
+                $offlineRequest->card_num = substr($cardNum, 0, 4) . ' **** **** ' . substr($cardNum, 12, 4);
                 $offlineRequest->status = 'approved';
                 $offlineRequest->transcation_id = $response['store_transaction']['success_trans_id'];
                 $offlineRequest->total = $amount;
