@@ -52,29 +52,15 @@ class AdminPaymoController  extends ApiBaseController
         if($planType == "monthly") $amount = $plan->monthly_price;
         if($planType == "annual") $amount = $plan->annual_price;
       
-        
-        // $lastPaymentTranscation = PaymentTranscation::online()->with(['subscriptionPlan'])->whereNotNull('paid_on')->latest()->first();
-
-        $cardNum = $this->replace($request->cardNumber);
-
-        $expiries = explode('/', $request->expirationDate);
-
-        $expirationDate = $expiries[1] . $expiries[0];
-
-        // $paymoBindCard = $this->AtmosBindCard($paymoToken, $cardNum, $expirationDate);
-
-        $paymoBindCard = Http::withHeaders([
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer '. $paymoToken
-        ])->post('https://partner.atmos.uz/partner/bind-card/create', [
-            "card_number" =>  $cardNum,
-            "expiry" => $expirationDate
-        ]);
-
-        $paymoBindCard = json_decode($paymoBindCard->body(), true);
+    
         
         try {
-                if ( $paymoBindCard['result']['code'] == "STPIMS-ERR-133" ) {
+             
+            $cardNum = $this->replace($request->cardNumber);
+
+            $expiries = explode('/', $request->expirationDate);
+
+            $expirationDate = $expiries[1] . $expiries[0];
 
                     $response = Http::withHeaders([
                         'Accept' => 'application/json',
@@ -95,7 +81,8 @@ class AdminPaymoController  extends ApiBaseController
                             'Accept' => 'application/json',
                             'Authorization' => 'Bearer '. $paymoToken
                         ])->post('https://partner.atmos.uz/merchant/pay/pre-confirm', [
-                            "card_token" =>  $paymoBindCard['data']['card_token'],
+                            "card_number" =>  $cardNum,
+                            'expiry' => $expirationDate,
                             "store_id" =>  $methodPaymo['paymo_store_id'],
                             "transaction_id" => $response['transaction_id'],
                         ]);
@@ -104,13 +91,11 @@ class AdminPaymoController  extends ApiBaseController
 
                         if($res['result']['code'] == "OK" ) {
 
-                            $bind = BindedCard::where('card_id', $paymoBindCard['data']['card_id'])->first();
-
                             return response()->json([
                                 'data' => [
                                     'status' => true,
                                     'cardStatus' => true,
-                                    'bindID' => $bind->id ?? '',
+                                    'bindID' => 1,
                                     'transaction_id' => $response['transaction_id']
                                 ]
                             ]);
@@ -137,42 +122,6 @@ class AdminPaymoController  extends ApiBaseController
                     ], 400);
                    }
                     
-                // $bind = BindedCard::where('card_id', $paymoBindCard['data']['card_id'])->first();
-
-                // return response()->json([
-                //     'data' => [
-                //         'status' => true,
-                //         'cardStatus' => true,
-                //         'bindID' => $bind->id
-                //     ]
-                // ]);
-
-            } else {
-
-
-                if ($paymoBindCard['transaction_id'] == null) {
-                    
-                    return response()->json([
-                        'status' => false,
-                        'error' => [
-                            'message' => $paymoBindCard['result']['description']
-                        ]
-                    ], 404);
-                    
-
-                } else {
-                   
-                    return response()->json([
-                        'data' => [
-                            'status' => false,
-                            'cardStatus' => false,
-                            'transaction_id' => $paymoBindCard['transaction_id']
-                        ]
-                    ]);
-
-                }
-                
-            }
 
         } catch (\Exception $e) {
 
@@ -291,136 +240,112 @@ class AdminPaymoController  extends ApiBaseController
         }
     }
 
-    public function bindCard(BindCardRequest $request)
-    {
+    // public function bindCard(BindCardRequest $request)
+    // {
         
-        $methodPaymo = SuperAdminCommon::getAppPaymoSettings();
+    //     $methodPaymo = SuperAdminCommon::getAppPaymoSettings();
 
-        if (!$methodPaymo) {
-            throw new ApiException('Subscription Method Paymo Not Exists');
-        }
-        $paymoToken = $this->AtmosToken( $methodPaymo['paymo_api_key'], $methodPaymo['paymo_api_secret'] );
+    //     if (!$methodPaymo) {
+    //         throw new ApiException('Subscription Method Paymo Not Exists');
+    //     }
+    //     $paymoToken = $this->AtmosToken( $methodPaymo['paymo_api_key'], $methodPaymo['paymo_api_secret'] );
         
-        $planType = $request->plan_type;
+    //     $planType = $request->plan_type;
 
-        $convertedId = Hashids::decode($request->plan_id);
+    //     $convertedId = Hashids::decode($request->plan_id);
 
-        $planId = $convertedId[0];
+    //     $planId = $convertedId[0];
 
-        $plan = SubscriptionPlan::find($planId);
+    //     $plan = SubscriptionPlan::find($planId);
 
-        if (!$plan) {
-            throw new ApiException('Subscription Plan Not Exists');
-        }
+    //     if (!$plan) {
+    //         throw new ApiException('Subscription Plan Not Exists');
+    //     }
 
-        if($planType == "monthly") $amount = $plan->monthly_price;
-        if($planType == "annual") $amount = $plan->annual_price;
+    //     if($planType == "monthly") $amount = $plan->monthly_price;
+    //     if($planType == "annual") $amount = $plan->annual_price;
       
 
 
-        try {
-
-            $respon = Http::withHeaders([
-                'Accept' => 'application/json',
-                'Authorization' => 'Bearer '. $paymoToken
-            ])->post('https://partner.atmos.uz/partner/bind-card/apply', [
-                "transaction_id" =>  $request->transaction_id,
-                "otp" => $request->verification_code
-            ]);
-
-            $respon = json_decode($respon->body(), true);
-
-            if($respon['result']['code'] == "OK")
-            {
-                $loggedInUser = user();
-
-                $newCard = new BindedCard();
-                $newCard->user_id = $loggedInUser->id;
-                $newCard->card_id = $respon['data']['card_id'];
-                $newCard->pan = $respon['data']['pan'];
-                $newCard->expiry = $respon['data']['expiry'];
-                $newCard->card_holder = $respon['data']['card_holder'];
-                $newCard->balance = $respon['data']['balance'];
-                $newCard->phone = $respon['data']['phone'];
-                $newCard->card_token = $respon['data']['card_token'];
-                $newCard->save();
+    //     try {
 
                 
-                $response = Http::withHeaders([
-                    'Accept' => 'application/json',
-                    'Authorization' => 'Bearer '. $paymoToken
-                ])->post('https://partner.atmos.uz/merchant/pay/create', [
-                    "amount" =>  $amount,
-                    "account" => $loggedInUser->id,
-                    "terminal_id" =>  $methodPaymo['paymo_terminal_id'],
-                    "store_id" =>  $methodPaymo['paymo_store_id'],
-                    "lang" => "ru"
-                ]);
+    //             $cardNum = $this->replace($request->cardNumber);
 
-               if($response['result']['code'] == "OK" ) {
+    //             $expiries = explode('/', $request->expirationDate);
 
-                    $res = Http::withHeaders([
-                        'Accept' => 'application/json',
-                        'Authorization' => 'Bearer '. $paymoToken
-                    ])->post('https://partner.atmos.uz/merchant/pay/pre-confirm', [
-                        "card_token" =>  $newCard->card_token,
-                        "store_id" =>  $methodPaymo['paymo_store_id'],
-                        "transaction_id" => $response['transaction_id'],
-                    ]);
+    //             $expirationDate = $expiries[1] . $expiries[0];
 
-                    if($res['result']['code'] == "OK" ) {
+    //             $loggedInUser = user();
 
-                        return response()->json([
-                            'data' => [
-                                'status' => true,
-                                'cardStatus' => true,
-                                'bindID' => $newCard->id,
-                                'transaction_id' => $response['transaction_id']
-                            ]
-                        ]);
+                
+    //             $response = Http::withHeaders([
+    //                 'Accept' => 'application/json',
+    //                 'Authorization' => 'Bearer '. $paymoToken
+    //             ])->post('https://partner.atmos.uz/merchant/pay/create', [
+    //                 "amount" =>  $amount,
+    //                 "account" => $loggedInUser->id,
+    //                 "terminal_id" =>  $methodPaymo['paymo_terminal_id'],
+    //                 "store_id" =>  $methodPaymo['paymo_store_id'],
+    //                 "lang" => "ru"
+    //             ]);
+
+    //            if($response['result']['code'] == "OK" ) {
+
+    //                 $res = Http::withHeaders([
+    //                     'Accept' => 'application/json',
+    //                     'Authorization' => 'Bearer '. $paymoToken
+    //                 ])->post('https://partner.atmos.uz/merchant/pay/pre-confirm', [
+    //                     "card_number" =>  $cardNum,
+    //                     'expiry' => $expirationDate,
+    //                     "store_id" =>  $methodPaymo['paymo_store_id'],
+    //                     "transaction_id" => $response['transaction_id'],
+    //                 ]);
+
+    //                 if($res['result']['code'] == "OK" ) {
+
+    //                     return response()->json([
+    //                         'data' => [
+    //                             'status' => true,
+    //                             'cardStatus' => true,
+    //                             'bindID' => 1,
+    //                             'transaction_id' => $response['transaction_id']
+    //                         ]
+    //                     ]);
 
                     
-                    }
+    //                 }
 
-                    else{
-                        return response()->json([
-                            'status' => false,
-                            'error' => [
-                                'message' => $res['result']['description']
-                            ]
-                        ], 400);
-                    }
+    //                 else{
+    //                     return response()->json([
+    //                         'status' => false,
+    //                         'error' => [
+    //                             'message' => $res['result']['description']
+    //                         ]
+    //                     ], 400);
+    //                 }
 
-               } else {
+    //            } else {
                 
-                return response()->json([
-                    'status' => false,
-                    'error' => [
-                        'message' => $response['result']['description']
-                    ]
-                ], 400);
-               }
-
-            }
-            else 
-            return response()->json([
-                'status' => false,
-                'error' => [
-                    'message' => $response['result']['description']
-                ]
-            ], 400);
+    //             return response()->json([
+    //                 'status' => false,
+    //                 'error' => [
+    //                     'message' => $response['result']['description']
+    //                 ]
+    //             ], 400);
+    //            }
             
 
-        } catch (\Exception $e) {
+    //     } catch (\Exception $e) {
 
-            $error = [
-                'status' => false,
-                'message' => $e->getMessage()
-            ];
+    //         $error = [
+    //             'status' => false,
+    //             'message' => $e->getMessage()
+    //         ];
 
-            return response()->json($error);
-        }
-    }
+    //         return response()->json($error);
+    //     }
+    // }
 
     public function AtmosToken($username, $password)
     {
@@ -455,31 +380,31 @@ class AdminPaymoController  extends ApiBaseController
         }
     }
 
-    public function AtmosBindCard( $token, $cardNum, $expirationDate )
-    {
-        try {
+    // public function AtmosBindCard( $token, $cardNum, $expirationDate )
+    // {
+    //     try {
 
-            $response = Http::withHeaders([
-                'Accept' => 'application/json',
-                'Authorization' => 'Bearer '. $token
-            ])->post('https://partner.atmos.uz/partner/bind-card/create', [
-                "card_number" =>  $cardNum,
-                "expiry" => $expirationDate
-            ]);
+    //         $response = Http::withHeaders([
+    //             'Accept' => 'application/json',
+    //             'Authorization' => 'Bearer '. $token
+    //         ])->post('https://partner.atmos.uz/partner/bind-card/create', [
+    //             "card_number" =>  $cardNum,
+    //             "expiry" => $expirationDate
+    //         ]);
 
-            return $response;
+    //         return $response;
             
 
-        } catch (\Exception $e) {
+    //     } catch (\Exception $e) {
 
-            $error = [
-                'status' => false,
-                'message' => $e->getMessage()
-            ];
+    //         $error = [
+    //             'status' => false,
+    //             'message' => $e->getMessage()
+    //         ];
 
-            return response()->json($error);
-        }
-    }
+    //         return response()->json($error);
+    //     }
+    // }
 
     public function replace($text)
     {
