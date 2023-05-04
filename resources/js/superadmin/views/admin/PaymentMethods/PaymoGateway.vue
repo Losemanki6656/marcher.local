@@ -34,12 +34,12 @@
 			</a-col>
 		</a-row>
 
-		<div class="mb-20">
+		<div class="mb-10">
 			<a-alert v-if="CardMessage != ''" :message="CardMessage" type="warning" />
 		</div>
 
 
-		<div class="mb-20">
+		<!-- <div class="mb-20">
 			<a-alert v-if="!CardStatus" :message="$t('payment_settings.bind_card_text')" type="warning" />
 		</div>
 
@@ -61,16 +61,16 @@
 					</a-button>
 				</a-form-item>
 			</a-col>
-		</a-row>
+		</a-row> -->
 
 
 		<a-row :gutter="16" v-if="finishButton">
 			<a-col :xs="24" :sm="24" :md="24" :lg="24">
-				<a-form-item :label="$t('payment_settings.paymo_otp_code')" name="otp"
+				<a-form-item :label="$t('payment_settings.verification_code_bind_card')" name="otp"
 					:help="rules.otp ? rules.otp.message : null" :validateStatus="rules.otp ? 'error' : null"
 					class="required">
 					<a-input v-model:value="transOtp.otp" v-mask="maskotpCode" :value="maskValue" :placeholder="$t('common.placeholder_default_text', [
-							$t('payment_settings.paymo_otp_code'),
+							$t('payment_settings.verification_code_bind_card'),
 						])
 						" />
 				</a-form-item>
@@ -195,13 +195,7 @@ export default {
 					.then((response) => {
 						console.log(response);
 
-						if (!response.data.cardStatus) {
-							CardStatus.value = false;
-							CardReadonly.value = true;
-							otpCode.value.transcationID = response.data.transaction_id;
-
-							console.log(response.data.transaction_id);
-						} else if (response.data.cardStatus) {
+						if (response.data.cardStatus) {
 
 							CardStatus.value = true;
 							CardReadonly.value = true;
@@ -313,15 +307,11 @@ export default {
 					otp: transOtp.value.otp,
 					bindID: transOtp.value.bindID,
 					plan_id: formData.value.plan_id,
+					cardNumber: formData.value.cardNumber,
 					plan_type: formData.value.plan_type
 				})
 				.then((response) => {
 					console.log(response);
-
-					// if (response.data.status) {
-					// 	CardStatus.value = true;
-					// 	finishButton.value = true;
-					// }
 
 					loading.value = false;
 					if (response.data.success) {

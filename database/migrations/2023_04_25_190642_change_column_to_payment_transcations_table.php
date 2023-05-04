@@ -15,8 +15,7 @@ class ChangeColumnToPaymentTranscationsTable extends Migration
     {
         Schema::table('payment_transcations', function (Blueprint $table) {
             $table->float('total', 12, 2)->nullable()->default(0)->change();
-            $table->bigInteger('binded_card_id')->unsigned()->nullable();
-            $table->foreign('binded_card_id')->references('id')->on('binded_cards');
+            $table->string('card_num')->nullable();
         });
     }
 
@@ -28,7 +27,7 @@ class ChangeColumnToPaymentTranscationsTable extends Migration
     public function down()
     {
         Schema::table('payment_transcations', function (Blueprint $table) {
-            $table->dropColumn("binded_card_id");
+            $table->dropColumn("card_num");
         });
     }
 }

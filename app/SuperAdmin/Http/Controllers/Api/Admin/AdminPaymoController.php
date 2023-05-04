@@ -51,7 +51,6 @@ class AdminPaymoController  extends ApiBaseController
 
         if($planType == "monthly") $amount = $plan->monthly_price;
         if($planType == "annual") $amount = $plan->annual_price;
-      
     
         
         try {
@@ -62,65 +61,94 @@ class AdminPaymoController  extends ApiBaseController
 
             $expirationDate = $expiries[1] . $expiries[0];
 
-                    $response = Http::withHeaders([
-                        'Accept' => 'application/json',
-                        'Authorization' => 'Bearer '. $paymoToken
-                    ])->post('https://partner.atmos.uz/merchant/pay/create', [
-                        "amount" =>  $amount,
-                        "account" => $loggedInUser->id,
-                        "terminal_id" => $methodPaymo['paymo_terminal_id'],
-                        "store_id" => $methodPaymo['paymo_store_id'],
-                        "lang" => "ru"
-                    ]);
-                    
-                    $response = json_decode($response->body(), true);
+            $response = Http::withHeaders([
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer '. $paymoToken
+            ])->post('https://partner.atmos.uz/merchant/pay/create', [
+                "amount" => (int)$amount,
+                "account" => $loggedInUser->id,
+                "terminal_id" => $methodPaymo['paymo_terminal_id'],
+                "store_id" => $methodPaymo['paymo_store_id'],
+                "lang" => "ru"
+            ]);
+            if($response->failed()) {
+                return response()->json([
+                    'status' => false,
+                    'error' => [
+                        'message' => 'Atmos Timeout'
+                    ]
+                ], 408);
+                
+            }
+            $response = json_decode($response->body(), true);
 
-                   if($response['result']['code'] == "OK" ) {
+            if($response['result']['code'] == "OK" ) {
 
-                        $res = Http::withHeaders([
-                            'Accept' => 'application/json',
-                            'Authorization' => 'Bearer '. $paymoToken
-                        ])->post('https://partner.atmos.uz/merchant/pay/pre-confirm', [
-                            "card_number" =>  $cardNum,
-                            'expiry' => $expirationDate,
-                            "store_id" =>  $methodPaymo['paymo_store_id'],
-                            "transaction_id" => $response['transaction_id'],
-                        ]);
-                        
-                        $res = json_decode($res->body(), true);
+            $res = Http::timeout(5)->withHeaders([
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer '. $paymoToken
+            ])->post('https://partner.atmos.uz/merchant/pay/pre-confirm', [
+                "card_number" =>  $cardNum,
+                'expiry' => $expirationDate,
+                "store_id" =>  $methodPaymo['paymo_store_id'],
+                "transaction_id" => $response['transaction_id'],
+            ]);
 
-                        if($res['result']['code'] == "OK" ) {
+            if($res->failed()) {
+                return response()->json([
+                    'status' => false,
+                    'error' => [
+                        'message' => 'Atmos Timeout'
+                    ]
+                ], 408);
+                
+            }
 
-                            return response()->json([
-                                'data' => [
-                                    'status' => true,
-                                    'cardStatus' => true,
-                                    'bindID' => 1,
-                                    'transaction_id' => $response['transaction_id']
-                                ]
-                            ]);
+            $res = json_decode($res->body(), true);      
+   
 
-                        
-                        }
+            if($res['result']['code'] == "OK" ) {
 
-                        else{
-                            return response()->json([
-                                'status' => false,
-                                'error' => [
-                                    'message' => $res['result']['description']
-                                ]
-                            ], 400);
-                        }
+                return response()->json([
+                    'data' => [
+                        'status' => true,
+                        'cardStatus' => true,
+                        'bindID' => 1,
+                        'transaction_id' => $response['transaction_id']
+                    ]
+                ]);                
 
-                   } else {
-                    
+            }
+
+            else {
+                if(!$response->serverError()) {
                     return response()->json([
                         'status' => false,
                         'error' => [
                             'message' => $response['result']['description']
                         ]
                     ], 400);
-                   }
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'error' => [
+                            'message' => 'Atmos Timeout'
+                        ]
+                    ], 408);
+                }
+            }
+
+            } else {
+                
+                return response()->json([
+                    'status' => false,
+                    'error' => [
+                        'message' => $res['result']['description']
+                    ]
+                ], 400);
+
+            }            
+                        
                     
 
         } catch (\Exception $e) {
@@ -194,7 +222,7 @@ class AdminPaymoController  extends ApiBaseController
                 $offlineRequest->company_id = $loggedUserCompany->id;
                 $offlineRequest->subscription_plan_id = $planId;
                 $offlineRequest->plan_type = $request->plan_type;
-                $offlineRequest->binded_card_id = $request->bindID;
+                $offlineRequest->card_num = substr($request->cardNumber, 0, 4) . ' **** **** ' . substr($request->cardNumber, 12, 4);
                 $offlineRequest->status = 'approved';
                 $offlineRequest->transcation_id = $response['store_transaction']['success_trans_id'];
                 $offlineRequest->total = $amount;
