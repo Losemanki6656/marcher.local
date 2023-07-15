@@ -44,11 +44,13 @@ class ProductController extends ApiBaseController
         if ($request->has('fetch_stock_alert') && $request->fetch_stock_alert) {
             $query = $query->whereNotNull('stock_quantitiy_alert')
                 ->whereRaw('product_details.current_stock <= product_details.stock_quantitiy_alert');
-        };
+        }
+        ;
 
         if ($request->has('x_id') && $request->x_id != '') {
             $query = $query->where('products.id', $this->getIdFromHash($request->x_id));
-        };
+        }
+        ;
 
         return $query;
     }
@@ -197,10 +199,10 @@ class ProductController extends ApiBaseController
 
                     if ($taxType == 'inclusive') {
                         $subTotal = $singleUnitPrice;
-                        $singleUnitPrice =  ($singleUnitPrice * 100) / (100 + $taxRate);
+                        $singleUnitPrice = ($singleUnitPrice * 100) / (100 + $taxRate);
                         $taxAmount = ($singleUnitPrice) * ($taxRate / 100);
                     } else {
-                        $taxAmount =  ($singleUnitPrice * ($taxRate / 100));
+                        $taxAmount = ($singleUnitPrice * ($taxRate / 100));
                         $subTotal = $singleUnitPrice + $taxAmount;
                     }
                 } else {
@@ -210,36 +212,36 @@ class ProductController extends ApiBaseController
                 }
 
                 $allProducs[] = [
-                    'item_id'    =>  '',
-                    'xid'    =>  $product->xid,
-                    'name'    =>  $product->name,
-                    'image'    =>  $product->image,
-                    'image_url'    =>  $product->image_url,
-                    'discount_rate'    =>  0,
-                    'total_discount'    =>  0,
-                    'x_tax_id'    =>  $tax ? $tax->xid : null,
-                    'tax_type'    =>  $taxType,
-                    'tax_rate'    =>  $taxRate,
-                    'total_tax'    =>  $taxAmount,
-                    'x_unit_id'    =>  Hashids::encode($product->unit_id),
-                    'unit'    =>  $unit,
-                    'unit_price'    =>  $unitPrice,
-                    'single_unit_price'    =>  $singleUnitPrice,
-                    'subtotal'    =>  $subTotal,
-                    'quantity'    =>  1,
-                    'stock_quantity'    =>  $stockQuantity,
-                    'unit_short_name'    =>  $unit ? $unit->short_name : '',
+                    'item_id' => '',
+                    'xid' => $product->xid,
+                    'name' => $product->name,
+                    'image' => $product->image,
+                    'image_url' => $product->image_url,
+                    'discount_rate' => 0,
+                    'total_discount' => 0,
+                    'x_tax_id' => $tax ? $tax->xid : null,
+                    'tax_type' => $taxType,
+                    'tax_rate' => $taxRate,
+                    'total_tax' => $taxAmount,
+                    'x_unit_id' => Hashids::encode($product->unit_id),
+                    'unit' => $unit,
+                    'unit_price' => $unitPrice,
+                    'single_unit_price' => $singleUnitPrice,
+                    'subtotal' => $subTotal,
+                    'quantity' => 1,
+                    'stock_quantity' => $stockQuantity,
+                    'unit_short_name' => $unit ? $unit->short_name : '',
                 ];
             }
 
             // All Type products
             if (!$request->has('order_type')) {
                 $allProducs[] = [
-                    'xid'    =>  $product->xid,
-                    'name'    =>  $product->name,
-                    'image'    =>  $product->image,
-                    'image_url'    =>  $product->image_url,
-                    'stock_quantity'    =>  $productDetails->current_stock,
+                    'xid' => $product->xid,
+                    'name' => $product->name,
+                    'image' => $product->image,
+                    'image_url' => $product->image_url,
+                    'stock_quantity' => $productDetails->current_stock,
                 ];
             }
         }
@@ -309,10 +311,10 @@ class ProductController extends ApiBaseController
 
                     if ($taxType == 'inclusive') {
                         $subTotal = $singleUnitPrice;
-                        $singleUnitPrice =  ($singleUnitPrice * 100) / (100 + $taxRate);
+                        $singleUnitPrice = ($singleUnitPrice * 100) / (100 + $taxRate);
                         $taxAmount = ($singleUnitPrice) * ($taxRate / 100);
                     } else {
-                        $taxAmount =  ($singleUnitPrice * ($taxRate / 100));
+                        $taxAmount = ($singleUnitPrice * ($taxRate / 100));
                         $subTotal = $singleUnitPrice + $taxAmount;
                     }
                 } else {
@@ -322,36 +324,36 @@ class ProductController extends ApiBaseController
                 }
 
                 $allProduct = [
-                    'item_id'    =>  '',
-                    'xid'    =>  $product->xid,
-                    'name'    =>  $product->name,
-                    'image'    =>  $product->image,
-                    'image_url'    =>  $product->image_url,
-                    'discount_rate'    =>  0,
-                    'total_discount'    =>  0,
-                    'x_tax_id'    =>  $tax ? $tax->xid : null,
-                    'tax_type'    =>  $taxType,
-                    'tax_rate'    =>  $taxRate,
-                    'total_tax'    =>  $taxAmount,
-                    'x_unit_id'    =>  Hashids::encode($product->unit_id),
-                    'unit'    =>  $unit,
-                    'unit_price'    =>  $unitPrice,
-                    'single_unit_price'    =>  $singleUnitPrice,
-                    'subtotal'    =>  $subTotal,
-                    'quantity'    =>  1,
-                    'stock_quantity'    =>  $stockQuantity,
-                    'unit_short_name'    =>  $unit ? $unit->short_name : '',
+                    'item_id' => '',
+                    'xid' => $product->xid,
+                    'name' => $product->name,
+                    'image' => $product->image,
+                    'image_url' => $product->image_url,
+                    'discount_rate' => 0,
+                    'total_discount' => 0,
+                    'x_tax_id' => $tax ? $tax->xid : null,
+                    'tax_type' => $taxType,
+                    'tax_rate' => $taxRate,
+                    'total_tax' => $taxAmount,
+                    'x_unit_id' => Hashids::encode($product->unit_id),
+                    'unit' => $unit,
+                    'unit_price' => $unitPrice,
+                    'single_unit_price' => $singleUnitPrice,
+                    'subtotal' => $subTotal,
+                    'quantity' => 1,
+                    'stock_quantity' => $stockQuantity,
+                    'unit_short_name' => $unit ? $unit->short_name : '',
                 ];
             }
 
             // All Type products
             if (!$request->has('order_type')) {
                 $allProduct = [
-                    'xid'    =>  $product->xid,
-                    'name'    =>  $product->name,
-                    'image'    =>  $product->image,
-                    'image_url'    =>  $product->image_url,
-                    'stock_quantity'    =>  $productDetails->current_stock,
+                    'xid' => $product->xid,
+                    'name' => $product->name,
+                    'image' => $product->image,
+                    'image_url' => $product->image_url,
+                    'stock_quantity' => $productDetails->current_stock,
                 ];
             }
         }

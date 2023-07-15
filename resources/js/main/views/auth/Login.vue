@@ -3,79 +3,39 @@
         <a-row class="main-container-div">
             <a-col :xs="24" :sm="24" :md="24" :lg="8">
                 <a-row class="login-left-div">
-                    <a-col
-                        :xs="{ span: 20, offset: 2 }"
-                        :sm="{ span: 20, offset: 2 }"
-                        :md="{ span: 16, offset: 4 }"
-                        :lg="{ span: 16, offset: 4 }"
-                    >
-                        <a-card
-                            :title="null"
-                            class="login-div"
-                            :bordered="innerWidth <= 768 ? true : false"
-                        >
+                    <a-col :xs="{ span: 20, offset: 2 }" :sm="{ span: 20, offset: 2 }" :md="{ span: 16, offset: 4 }"
+                        :lg="{ span: 16, offset: 4 }">
+                        <a-card :title="null" class="login-div" :bordered="innerWidth <= 768 ? true : false">
                             <a-form layout="vertical">
                                 <div class="login-logo mb-30">
-                                    <img
-                                        class="login-img-logo"
-                                        :src="globalSetting.light_logo_url"
-                                    />
+                                    <img class="login-img-logo" :src="globalSetting.light_logo_url" />
                                 </div>
-                                <a-alert
-                                    v-if="onRequestSend.error != ''"
-                                    :message="onRequestSend.error"
-                                    type="error"
-                                    show-icon
-                                    class="mb-20 mt-10"
-                                />
-                                <a-alert
-                                    v-if="onRequestSend.success"
-                                    :message="$t('messages.login_success')"
-                                    type="success"
-                                    show-icon
-                                    class="mb-20 mt-10"
-                                />
-                                <a-form-item
-                                    :label="$t('user.email_phone')"
-                                    name="email"
+                                <a-alert v-if="onRequestSend.error != ''" :message="onRequestSend.error" type="error"
+                                    show-icon class="mb-20 mt-10" />
+                                <a-alert v-if="onRequestSend.success" :message="$t('messages.login_success')" type="success"
+                                    show-icon class="mb-20 mt-10" />
+                                <a-form-item :label="$t('user.email_phone')" name="email"
                                     :help="rules.email ? rules.email.message : null"
-                                    :validateStatus="rules.email ? 'error' : null"
-                                >
-                                    <a-input
-                                        v-model:value="credentials.email"
-                                        @pressEnter="onSubmit"
-                                        :placeholder="
-                                            $t('common.placeholder_default_text', [
-                                                $t('user.email_phone'),
-                                            ])
-                                        "
-                                    />
+                                    :validateStatus="rules.email ? 'error' : null">
+                                    <a-input v-model:value="credentials.email" type="text" @pressEnter="onSubmit"
+                                        :placeholder="$t('common.placeholder_default_text', [
+                                            $t('user.email_phone'),
+                                        ])
+                                            " />
                                 </a-form-item>
 
-                                <a-form-item
-                                    :label="$t('user.password')"
-                                    name="password"
+                                <a-form-item :label="$t('user.password')" name="password"
                                     :help="rules.password ? rules.password.message : null"
-                                    :validateStatus="rules.password ? 'error' : null"
-                                >
-                                    <a-input-password
-                                        v-model:value="credentials.password"
-                                        @pressEnter="onSubmit"
-                                        :placeholder="
-                                            $t('common.placeholder_default_text', [
-                                                $t('user.password'),
-                                            ])
-                                        "
-                                    />
+                                    :validateStatus="rules.password ? 'error' : null">
+                                    <a-input-password v-model:value="credentials.password" @pressEnter="onSubmit"
+                                        type="password" :placeholder="$t('common.placeholder_default_text', [
+                                            $t('user.password'),
+                                        ])
+                                            " />
                                 </a-form-item>
 
                                 <a-form-item class="mt-30">
-                                    <a-button
-                                        :loading="loading"
-                                        @click="onSubmit"
-                                        class="login-btn"
-                                        block
-                                    >
+                                    <a-button :loading="loading" @click="onSubmit" class="login-btn" block>
                                         {{ $t("menu.login") }}
                                     </a-button>
                                 </a-form-item>
@@ -113,7 +73,7 @@ export default defineComponent({
         const loginBackground = globalSetting.value.login_image_url;
         const store = useStore();
         const router = useRouter();
-		const selectedLang = computed(() => store.state.auth.lang);
+        const selectedLang = computed(() => store.state.auth.lang);
         const credentials = reactive({
             email: null,
             password: null,

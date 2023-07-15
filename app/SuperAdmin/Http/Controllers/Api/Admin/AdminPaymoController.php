@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
-class AdminPaymoController  extends ApiBaseController
+class AdminPaymoController extends ApiBaseController
 {
     use StripeSettings;
 
@@ -34,9 +34,9 @@ class AdminPaymoController  extends ApiBaseController
         if (!$methodPaymo) {
             throw new ApiException('Subscription Method Paymo Not Exists');
         }
-        
-        $paymoToken = $this->AtmosToken( $methodPaymo['paymo_api_key'], $methodPaymo['paymo_api_secret'] );
-        
+
+        $paymoToken = $this->AtmosToken($methodPaymo['paymo_api_key'], $methodPaymo['paymo_api_secret']);
+
         $planType = $request->plan_type;
 
         $convertedId = Hashids::decode($request->plan_id);
@@ -49,12 +49,14 @@ class AdminPaymoController  extends ApiBaseController
             throw new ApiException('Subscription Plan Not Exists');
         }
 
-        if($planType == "monthly") $amount = $plan->monthly_price;
-        if($planType == "annual") $amount = $plan->annual_price;
-    
-        
+        if ($planType == "monthly")
+            $amount = $plan->monthly_price;
+        if ($planType == "annual")
+            $amount = $plan->annual_price;
+
+
         try {
-             
+
             $cardNum = $this->replace($request->cardNumber);
 
             $expiries = explode('/', $request->expirationDate);
@@ -63,93 +65,91 @@ class AdminPaymoController  extends ApiBaseController
 
             $response = Http::withHeaders([
                 'Accept' => 'application/json',
-                'Authorization' => 'Bearer '. $paymoToken
+                'Authorization' => 'Bearer ' . $paymoToken
             ])->post('https://partner.atmos.uz/merchant/pay/create', [
-                "amount" => $amount * 100,
-                "account" => $loggedInUser->id,
-                "terminal_id" => $methodPaymo['paymo_terminal_id'],
-                "store_id" => $methodPaymo['paymo_store_id'],
-                "lang" => "ru"
-            ]);
-            if($response->failed()) {
+                        "amount" => 50000,
+                        "account" => $loggedInUser->id,
+                        "terminal_id" => $methodPaymo['paymo_terminal_id'],
+                        "store_id" => $methodPaymo['paymo_store_id'],
+                        "lang" => "ru"
+                    ]);
+            if ($response->failed()) {
                 return response()->json([
                     'status' => false,
                     'error' => [
                         'message' => 'Atmos Timeout'
                     ]
                 ], 408);
-                
+
             }
             $response = json_decode($response->body(), true);
 
-            if($response['result']['code'] == "OK" ) {
+            if ($response['result']['code'] == "OK") {
 
-            $res = Http::timeout(5)->withHeaders([
-                'Accept' => 'application/json',
-                'Authorization' => 'Bearer '. $paymoToken
-            ])->post('https://partner.atmos.uz/merchant/pay/pre-confirm', [
-                "card_number" =>  $cardNum,
-                'expiry' => $expirationDate,
-                "store_id" =>  $methodPaymo['paymo_store_id'],
-                "transaction_id" => $response['transaction_id'],
-            ]);
+                $res = Http::timeout(5)->withHeaders([
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer ' . $paymoToken
+                ])->post('https://partner.atmos.uz/merchant/pay/pre-confirm', [
+                            "card_number" => $cardNum,
+                            'expiry' => $expirationDate,
+                            "store_id" => $methodPaymo['paymo_store_id'],
+                            "transaction_id" => $response['transaction_id'],
+                        ]);
 
-            if($res->failed()) {
-                return response()->json([
-                    'status' => false,
-                    'error' => [
-                        'message' => 'Atmos Timeout'
-                    ]
-                ], 408);
-                
-            }
-
-            $res = json_decode($res->body(), true);      
-   
-
-            if($res['result']['code'] == "OK" ) {
-
-                return response()->json([
-                    'data' => [
-                        'status' => true,
-                        'cardStatus' => true,
-                        'bindID' => 1,
-                        'transaction_id' => $response['transaction_id']
-                    ]
-                ]);                
-
-            }
-
-            else {
-                if(!$response->serverError()) {
-                    return response()->json([
-                        'status' => false,
-                        'error' => [
-                            'message' => $response['result']['description']
-                        ]
-                    ], 400);
-                } else {
+                if ($res->failed()) {
                     return response()->json([
                         'status' => false,
                         'error' => [
                             'message' => 'Atmos Timeout'
                         ]
                     ], 408);
+
                 }
-            }
+
+                $res = json_decode($res->body(), true);
+
+
+                if ($res['result']['code'] == "OK") {
+
+                    return response()->json([
+                        'data' => [
+                            'status' => true,
+                            'cardStatus' => true,
+                            'bindID' => 1,
+                            'transaction_id' => $response['transaction_id']
+                        ]
+                    ]);
+
+                } else {
+                    if (!$response->serverError()) {
+                        return response()->json([
+                            'status' => false,
+                            'error' => [
+                                'message' => $response['result']['description']
+                            ]
+                        ], 400);
+                    } else {
+                        return response()->json([
+                            'status' => false,
+                            'error' => [
+                                'message' => 'Atmos Timeout'
+                            ]
+                        ], 408);
+                    }
+                }
 
             } else {
-                
+
                 return response()->json([
                     'status' => false,
                     'error' => [
-                        'message' => $res['result']['description']
+                        'message' => $response['result']['description']
                     ]
                 ], 400);
 
-            }            
-                        
-                    
+            }
+
+
 
         } catch (\Exception $e) {
 
@@ -189,7 +189,7 @@ class AdminPaymoController  extends ApiBaseController
             throw new ApiException('You can not downgrade plan because you have added ' . $productCount . ' products while your new plan allow max products ' . $plan->max_products);
         }
 
-        $paymoToken = $this->AtmosToken( $methodPaymo['paymo_api_key'], $methodPaymo['paymo_api_secret'] );
+        $paymoToken = $this->AtmosToken($methodPaymo['paymo_api_key'], $methodPaymo['paymo_api_secret']);
 
         try {
 
@@ -197,27 +197,29 @@ class AdminPaymoController  extends ApiBaseController
 
             $response = Http::withHeaders([
                 'Accept' => 'application/json',
-                'Authorization' => 'Bearer '. $paymoToken
+                'Authorization' => 'Bearer ' . $paymoToken
             ])->post('https://partner.atmos.uz/merchant/pay/confirm', [
-                "transaction_id" =>  $request->transaction_id,
-                "otp" => $request->otp,
-                "store_id" =>  $methodPaymo['paymo_store_id'],
-            ]);
+                        "transaction_id" => $request->transaction_id,
+                        "otp" => $request->otp,
+                        "store_id" => $methodPaymo['paymo_store_id'],
+                    ]);
 
             $response = json_decode($response->body(), true);
 
-            if($response['result']['code'] == "OK" ) { 
-               
+            if ($response['result']['code'] == "OK") {
+
                 $amount = 0;
-                if($planType == "monthly") $amount = $plan->monthly_price;
-                if($planType == "annual") $amount = $plan->annual_price;
+                if ($planType == "monthly")
+                    $amount = $plan->monthly_price;
+                if ($planType == "annual")
+                    $amount = $plan->annual_price;
 
-                $lastPaymentTranscation = PaymentTranscation::where('status','approved')->whereNotNull('paid_on')->latest()->first();
+                $lastPaymentTranscation = PaymentTranscation::where('status', 'approved')->whereNotNull('paid_on')->latest()->first();
 
-                if($lastPaymentTranscation)
-                     $next_Date = $lastPaymentTranscation->next_payment_date; 
+                if ($lastPaymentTranscation)
+                    $next_Date = $lastPaymentTranscation->next_payment_date;
                 else
-                     $next_Date = now();
+                    $next_Date = now();
 
                 $offlineRequest = new PaymentTranscation();
                 $offlineRequest->payment_method = "Online";
@@ -229,8 +231,10 @@ class AdminPaymoController  extends ApiBaseController
                 $offlineRequest->transcation_id = $response['store_transaction']['success_trans_id'];
                 $offlineRequest->total = $amount;
                 $offlineRequest->paid_on = now();
-                if($planType == "annual") $offlineRequest->next_payment_date = date('Y-m-d', strtotime($next_Date->addYear()));
-                if($planType == "monthly") $offlineRequest->next_payment_date = date('Y-m-d', strtotime($next_Date->addMonth()));
+                if ($planType == "annual")
+                    $offlineRequest->next_payment_date = date('Y-m-d', strtotime($next_Date->addYear()));
+                if ($planType == "monthly")
+                    $offlineRequest->next_payment_date = date('Y-m-d', strtotime($next_Date->addMonth()));
                 $offlineRequest->response_data = $response;
                 $offlineRequest->save();
 
@@ -248,9 +252,8 @@ class AdminPaymoController  extends ApiBaseController
                 ]);
 
                 return redirect(route('admin.subscription-plan.subscribe'));
-                
-            }
-            else {
+
+            } else {
                 return response()->json([
                     'status' => false,
                     'error' => [
@@ -258,7 +261,7 @@ class AdminPaymoController  extends ApiBaseController
                     ]
                 ], 400);
             }
-            
+
 
 
         } catch (\Exception $e) {
@@ -270,113 +273,6 @@ class AdminPaymoController  extends ApiBaseController
         }
     }
 
-    // public function bindCard(BindCardRequest $request)
-    // {
-        
-    //     $methodPaymo = SuperAdminCommon::getAppPaymoSettings();
-
-    //     if (!$methodPaymo) {
-    //         throw new ApiException('Subscription Method Paymo Not Exists');
-    //     }
-    //     $paymoToken = $this->AtmosToken( $methodPaymo['paymo_api_key'], $methodPaymo['paymo_api_secret'] );
-        
-    //     $planType = $request->plan_type;
-
-    //     $convertedId = Hashids::decode($request->plan_id);
-
-    //     $planId = $convertedId[0];
-
-    //     $plan = SubscriptionPlan::find($planId);
-
-    //     if (!$plan) {
-    //         throw new ApiException('Subscription Plan Not Exists');
-    //     }
-
-    //     if($planType == "monthly") $amount = $plan->monthly_price;
-    //     if($planType == "annual") $amount = $plan->annual_price;
-      
-
-
-    //     try {
-
-                
-    //             $cardNum = $this->replace($request->cardNumber);
-
-    //             $expiries = explode('/', $request->expirationDate);
-
-    //             $expirationDate = $expiries[1] . $expiries[0];
-
-    //             $loggedInUser = user();
-
-                
-    //             $response = Http::withHeaders([
-    //                 'Accept' => 'application/json',
-    //                 'Authorization' => 'Bearer '. $paymoToken
-    //             ])->post('https://partner.atmos.uz/merchant/pay/create', [
-    //                 "amount" =>  $amount,
-    //                 "account" => $loggedInUser->id,
-    //                 "terminal_id" =>  $methodPaymo['paymo_terminal_id'],
-    //                 "store_id" =>  $methodPaymo['paymo_store_id'],
-    //                 "lang" => "ru"
-    //             ]);
-
-    //            if($response['result']['code'] == "OK" ) {
-
-    //                 $res = Http::withHeaders([
-    //                     'Accept' => 'application/json',
-    //                     'Authorization' => 'Bearer '. $paymoToken
-    //                 ])->post('https://partner.atmos.uz/merchant/pay/pre-confirm', [
-    //                     "card_number" =>  $cardNum,
-    //                     'expiry' => $expirationDate,
-    //                     "store_id" =>  $methodPaymo['paymo_store_id'],
-    //                     "transaction_id" => $response['transaction_id'],
-    //                 ]);
-
-    //                 if($res['result']['code'] == "OK" ) {
-
-    //                     return response()->json([
-    //                         'data' => [
-    //                             'status' => true,
-    //                             'cardStatus' => true,
-    //                             'bindID' => 1,
-    //                             'transaction_id' => $response['transaction_id']
-    //                         ]
-    //                     ]);
-
-                    
-    //                 }
-
-    //                 else{
-    //                     return response()->json([
-    //                         'status' => false,
-    //                         'error' => [
-    //                             'message' => $res['result']['description']
-    //                         ]
-    //                     ], 400);
-    //                 }
-
-    //            } else {
-                
-    //             return response()->json([
-    //                 'status' => false,
-    //                 'error' => [
-    //                     'message' => $response['result']['description']
-    //                 ]
-    //             ], 400);
-    //            }
-            
-
-    //     } catch (\Exception $e) {
-
-    //         $error = [
-    //             'status' => false,
-    //             'message' => $e->getMessage()
-    //         ];
-
-    //         return response()->json($error);
-    //     }
-    // }
-
     public function AtmosToken($username, $password)
     {
         try {
@@ -385,19 +281,19 @@ class AdminPaymoController  extends ApiBaseController
             $url = 'https://partner.atmos.uz/token';
 
             $response = $client->request('POST', $url, [
-                'headers' =>  [
+                'headers' => [
                     'Accept' => 'application/json',
                 ],
                 'query' => 'grant_type=client_credentials',
                 'auth' => [
-                    $username, 
+                    $username,
                     $password
                 ]
             ]);
 
             // $response = json_decode($response->body(), true);
 
-            $info = json_decode($response->getBody()->getContents(), true); 
+            $info = json_decode($response->getBody()->getContents(), true);
 
             return $info['access_token'];
 
@@ -410,39 +306,13 @@ class AdminPaymoController  extends ApiBaseController
         }
     }
 
-    // public function AtmosBindCard( $token, $cardNum, $expirationDate )
-    // {
-    //     try {
-
-    //         $response = Http::withHeaders([
-    //             'Accept' => 'application/json',
-    //             'Authorization' => 'Bearer '. $token
-    //         ])->post('https://partner.atmos.uz/partner/bind-card/create', [
-    //             "card_number" =>  $cardNum,
-    //             "expiry" => $expirationDate
-    //         ]);
-
-    //         return $response;
-            
-
-    //     } catch (\Exception $e) {
-
-    //         $error = [
-    //             'status' => false,
-    //             'message' => $e->getMessage()
-    //         ];
-
-    //         return response()->json($error);
-    //     }
-    // }
-
     public function replace($text)
     {
-        $sym1 = ["/",' '];
+        $sym1 = ["/", ' '];
 
-        $sym2 = ['',''];
+        $sym2 = ['', ''];
 
         return str_replace($sym1, $sym2, $text);
     }
-   
+
 }

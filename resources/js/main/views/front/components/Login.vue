@@ -1,32 +1,19 @@
 <template>
     <a-button v-if="isLoggedIn" type="link">
-        <router-link
-            :to="{ name: 'front.dashboard', params: { warehouse: frontWarehouse.slug } }"
-        >
+        <router-link :to="{ name: 'front.dashboard', params: { warehouse: frontWarehouse.slug } }">
             <a-avatar :src="user.profile_image_url" :size="28" />
         </router-link>
     </a-button>
     <a-button type="link" @click="showLogin" v-else>
-        <user-outlined
-            :style="{
-                fontSize: '24px',
-                color: '#fff',
-                verticalAlign: 'top',
-            }"
-        />
+        <user-outlined :style="{
+            fontSize: '24px',
+            color: '#fff',
+            verticalAlign: 'top',
+        }" />
     </a-button>
 
-    <a-modal
-        v-model:visible="visible"
-        centered
-        :footer="null"
-        :title="null"
-        :width="450"
-        :closable="false"
-        :bodyStyle="{ borderRadius: '10px' }"
-        wrapClassName="login-register-modal"
-        @cancel="loginModalClosed"
-    >
+    <a-modal v-model:visible="visible" centered :footer="null" :title="null" :width="450" :closable="false"
+        :bodyStyle="{ borderRadius: '10px' }" wrapClassName="login-register-modal" @cancel="loginModalClosed">
         <div v-if="loginForm">
             <div :style="{ textAlign: 'center' }" class="mt-10">
                 <a-typography-title :level="2" :style="{ marginBottom: '0px' }">
@@ -38,49 +25,25 @@
             </div>
 
             <a-form layout="vertical" class="mt-30">
-                <a-alert
-                    v-if="errorMessage != ''"
-                    :message="errorMessage"
-                    type="error"
-                    class="mb-10"
-                    show-icon
-                />
+                <a-alert v-if="errorMessage != ''" :message="errorMessage" type="error" class="mb-10" show-icon />
 
-                <a-form-item
-                    :label="$t('user.email_phone')"
-                    name="email"
-                    :help="rules.email ? rules.email.message : null"
-                    :validateStatus="rules.email ? 'error' : null"
-                >
-                    <a-input
-                        v-model:value="credentials.email"
-                        @pressEnter="onLogin"
-                        :placeholder="
-                            $t('common.placeholder_default_text', [
-                                $t('user.email_phone'),
-                            ])
-                        "
-                    >
+                <a-form-item :label="$t('user.email_phone')" name="email" :help="rules.email ? rules.email.message : null"
+                    :validateStatus="rules.email ? 'error' : null">
+                    <a-input v-model:value="credentials.email" @pressEnter="onLogin" :placeholder="$t('common.placeholder_default_text', [
+                        $t('user.email_phone'),
+                    ])
+                        ">
                         <template #prefix>
                             <mail-outlined />
                         </template>
                     </a-input>
                 </a-form-item>
 
-                <a-form-item
-                    :label="$t('user.password')"
-                    name="password"
+                <a-form-item :label="$t('user.password')" name="password"
                     :help="rules.password ? rules.password.message : null"
-                    :validateStatus="rules.password ? 'error' : null"
-                >
-                    <a-input-password
-                        v-model:value="credentials.password"
-                        @pressEnter="onLogin"
-                        :placeholder="
-                            $t('common.placeholder_default_text', [$t('user.password')])
-                        "
-                        autocomplete="off"
-                    >
+                    :validateStatus="rules.password ? 'error' : null">
+                    <a-input-password v-model:value="credentials.password" @pressEnter="onLogin" :placeholder="$t('common.placeholder_default_text', [$t('user.password')])
+                        " autocomplete="off">
                         <template #prefix>
                             <lock-outlined />
                         </template>
@@ -88,13 +51,7 @@
                 </a-form-item>
 
                 <a-form-item>
-                    <a-button
-                        type="primary"
-                        class="mt-10"
-                        @click="onLogin"
-                        :loading="loading"
-                        block
-                    >
+                    <a-button type="primary" class="mt-10" @click="onLogin" :loading="loading" block>
                         {{ $t("front.login") }}
                     </a-button>
                 </a-form-item>
@@ -131,77 +88,42 @@
             </a-alert>
 
             <a-form v-else layout="vertical" class="mt-30">
-                <a-form-item
-                    :label="$t('user.name')"
-                    name="name"
-                    :help="rules.name ? rules.name.message : null"
-                    :validateStatus="rules.name ? 'error' : null"
-                >
-                    <a-input
-                        v-model:value="signupCredentials.name"
-                        @pressEnter="onSignup"
-                        :placeholder="
-                            $t('common.placeholder_default_text', [$t('user.name')])
-                        "
-                    >
+                <a-form-item :label="$t('user.name')" name="name" :help="rules.name ? rules.name.message : null"
+                    :validateStatus="rules.name ? 'error' : null">
+                    <a-input v-model:value="signupCredentials.name" @pressEnter="onSignup" :placeholder="$t('common.placeholder_default_text', [$t('user.name')])
+                        ">
                         <template #prefix>
                             <UserOutlined />
                         </template>
                     </a-input>
                 </a-form-item>
 
-                <a-form-item
-                    :label="$t('user.email')"
-                    name="email"
-                    :help="rules.email ? rules.email.message : null"
-                    :validateStatus="rules.email ? 'error' : null"
-                >
-                    <a-input
-                        v-model:value="signupCredentials.email"
-                        @pressEnter="onSignup"
-                        :placeholder="
-                            $t('common.placeholder_default_text', [$t('user.email')])
-                        "
-                    >
+                <a-form-item :label="$t('user.email')" name="email" :help="rules.email ? rules.email.message : null"
+                    :validateStatus="rules.email ? 'error' : null">
+                    <a-input v-model:value="signupCredentials.email" @pressEnter="onSignup" :placeholder="$t('common.placeholder_default_text', [$t('user.email')])
+                        ">
                         <template #prefix>
                             <MailOutlined />
                         </template>
                     </a-input>
                 </a-form-item>
 
-                <a-form-item
-                    :label="$t('user.phone')"
-                    name="phone"
-                    :help="rules.phone ? rules.phone.message : null"
-                    :validateStatus="rules.phone ? 'error' : null"
-                >
-                    <a-input
-                        v-model:value="signupCredentials.phone"
-                        @pressEnter="onSignup"
-                        :placeholder="
-                            $t('common.placeholder_default_text', [$t('user.phone')])
-                        "
-                    >
+                <a-form-item :label="$t('user.phone')" name="phone" :help="rules.phone ? rules.phone.message : null"
+                    :validateStatus="rules.phone ? 'error' : null">
+                    <a-input v-model:value="signupCredentials.phone" v-mask="maskPhone" :value="maskValue"
+                        @pressEnter="onSignup" :placeholder="$t('common.placeholder_default_text', [$t('user.phone')])
+                            ">
                         <template #prefix>
                             <PhoneOutlined />
                         </template>
                     </a-input>
                 </a-form-item>
 
-                <a-form-item
-                    :label="$t('user.password')"
-                    name="password"
+                <a-form-item :label="$t('user.password')" name="password"
                     :help="rules.password ? rules.password.message : null"
-                    :validateStatus="rules.password ? 'error' : null"
-                >
-                    <a-input-password
-                        v-model:value="signupCredentials.password"
-                        @pressEnter="onSignup"
-                        :placeholder="
-                            $t('common.placeholder_default_text', [$t('user.password')])
-                        "
-                        autocomplete="off"
-                    >
+                    :validateStatus="rules.password ? 'error' : null">
+                    <a-input-password v-model:value="signupCredentials.password" @pressEnter="onSignup" :placeholder="$t('common.placeholder_default_text', [$t('user.password')])
+                        " autocomplete="off">
                         <template #prefix>
                             <lock-outlined />
                         </template>
@@ -209,13 +131,7 @@
                 </a-form-item>
 
                 <a-form-item>
-                    <a-button
-                        type="primary"
-                        class="mt-10"
-                        @click="onSignup"
-                        :loading="loading"
-                        block
-                    >
+                    <a-button type="primary" class="mt-10" @click="onSignup" :loading="loading" block>
                         {{ $t("front.signup") }}
                     </a-button>
                 </a-form-item>
@@ -271,6 +187,8 @@ export default defineComponent({
         const visible = ref(false);
         const { t } = useI18n();
         const router = useRouter();
+        const maskPhone = ref('+{{999}}({{99}})-{{999}}-{{99}}-{{99}}');
+        const maskValue = ref('');
         const loginForm = ref(true);
         const signupSuccess = ref(false);
 
@@ -345,6 +263,8 @@ export default defineComponent({
             errorMessage,
             loading,
             frontWarehouse,
+            maskPhone,
+            maskValue,
 
             user: computed(() => store.state.front.user),
             isLoggedIn: computed(() => store.getters["front/isLoggedIn"]),

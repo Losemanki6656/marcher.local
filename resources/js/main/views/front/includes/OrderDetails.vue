@@ -1,11 +1,7 @@
 <template>
     <div v-if="order.cancelled">
-        <a-alert
-            :message="$t('online_orders.order_cancelled')"
-            :description="$t('online_orders.order_cancelled_message')"
-            type="error"
-            show-icon
-        >
+        <a-alert :message="$t('online_orders.order_cancelled')" :description="$t('online_orders.order_cancelled_message')"
+            type="error" show-icon>
             <template #icon><stop-outlined /></template>
         </a-alert>
     </div>
@@ -53,12 +49,7 @@
 
     <a-row class="mt-20">
         <a-col :span="24">
-            <a-table
-                :columns="columns"
-                :row-key="(record) => record.id"
-                :data-source="order.items"
-                :pagination="false"
-            >
+            <a-table :columns="columns" :row-key="(record) => record.id" :data-source="order.items" :pagination="false">
                 <template #bodyCell="{ index, column, record }">
                     <template v-if="column.dataIndex === 'id'">
                         {{ index + 1 }}
@@ -67,11 +58,7 @@
                         <a-list-item>
                             <a-list-item-meta>
                                 <template #avatar>
-                                    <a-avatar
-                                        :src="record.product.image_url"
-                                        size="large"
-                                        shape="square"
-                                    />
+                                    <a-avatar :src="record.product.image_url" size="large" shape="square" />
                                 </template>
                                 <template #title>
                                     {{ record.product.name }}

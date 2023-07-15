@@ -2,20 +2,12 @@
     <AdminPageHeader>
         <template #header>
             <a-page-header :title="$t(`menu.products`)" class="p-0">
-                <template
-                    v-if="
-                        permsArray.includes('products_create') ||
-                        permsArray.includes('admin')
-                    "
-                    #extra
-                >
+                <template v-if="permsArray.includes('products_create') ||
+                    permsArray.includes('admin')
+                    " #extra>
                     <a-space>
-                        <ImportProducts
-                            :pageTitle="$t('product.import_products')"
-                            :sampleFileUrl="sampleFileUrl"
-                            importUrl="products/import"
-                            @onUploadSuccess="setUrlData"
-                        />
+                        <ImportProducts :pageTitle="$t('product.import_products')" :sampleFileUrl="sampleFileUrl"
+                            importUrl="products/import" @onUploadSuccess="setUrlData" />
                         <SubscriptionModuleVisibility moduleName="product">
                             <a-button type="primary" @click="addItem">
                                 <PlusOutlined />
@@ -44,100 +36,48 @@
     </AdminPageHeader>
 
     <a-card class="page-content-container">
-        <AddEdit
-            :addEditType="addEditType"
-            :visible="addEditVisible"
-            :url="addEditUrl"
-            @addEditSuccess="addEditSuccess"
-            @closed="onCloseAddEdit"
-            :formData="formData"
-            :data="viewData"
-            :pageTitle="pageTitle"
-            :successMessage="successMessage"
-        />
+        <AddEdit :addEditType="addEditType" :visible="addEditVisible" :url="addEditUrl" @addEditSuccess="addEditSuccess"
+            @closed="onCloseAddEdit" :formData="formData" :data="viewData" :pageTitle="pageTitle"
+            :successMessage="successMessage" />
 
-        <ProductView
-            :product="viewData"
-            :visible="detailsVisible"
-            @closed="onCloseDetails"
-        />
+        <ProductView :product="viewData" :visible="detailsVisible" @closed="onCloseDetails" />
 
         <SubscriptionModuleVisibilityMessage moduleName="product" />
 
         <a-row :gutter="[15, 15]" class="mb-20">
             <a-col :xs="24" :sm="24" :md="8" :lg="6" :xl="4">
-                <a-input-search
-                    v-model:value="table.searchString"
-                    show-search
-                    @change="onTableSearch"
-                    @search="onTableSearch"
-                    style="width: 100%"
-                    :loading="table.filterLoading"
-                    :placeholder="$t('common.search')"
-                />
+                <a-input-search v-model:value="table.searchString" show-search @change="onTableSearch"
+                    @search="onTableSearch" style="width: 100%" :loading="table.filterLoading"
+                    :placeholder="$t('common.search')" />
             </a-col>
             <a-col :xs="24" :sm="24" :md="8" :lg="6" :xl="4">
-                <a-select
-                    v-model:value="filters.brand_id"
-                    :placeholder="$t('common.select_default_text', [$t('product.brand')])"
-                    :allowClear="true"
-                    style="width: 100%"
-                    optionFilterProp="title"
-                    show-search
-                    @change="setUrlData"
-                >
-                    <a-select-option
-                        v-for="brand in brands"
-                        :key="brand.xid"
-                        :title="brand.name"
-                        :value="brand.xid"
-                    >
+                <a-select v-model:value="filters.brand_id"
+                    :placeholder="$t('common.select_default_text', [$t('product.brand')])" :allowClear="true"
+                    style="width: 100%" optionFilterProp="title" show-search @change="setUrlData">
+                    <a-select-option v-for="brand in brands" :key="brand.xid" :title="brand.name" :value="brand.xid">
                         {{ brand.name }}
                     </a-select-option>
                 </a-select>
             </a-col>
             <a-col :xs="24" :sm="24" :md="8" :lg="6" :xl="4">
-                <a-tree-select
-                    v-model:value="filters.category_id"
-                    show-search
-                    style="width: 100%"
-                    :dropdown-style="{ maxHeight: '250px', overflow: 'auto' }"
-                    :placeholder="
-                        $t('common.select_default_text', [$t('category.category')])
-                    "
-                    :tree-data="categories"
-                    allow-clear
-                    tree-default-expand-all
-                    :filterTreeNode="filterTreeNode"
-                    @change="setUrlData"
-                />
+                <a-tree-select v-model:value="filters.category_id" show-search style="width: 100%"
+                    :dropdown-style="{ maxHeight: '250px', overflow: 'auto' }" :placeholder="$t('common.select_default_text', [$t('category.category')])
+                        " :tree-data="categories" allow-clear tree-default-expand-all :filterTreeNode="filterTreeNode"
+                    @change="setUrlData" />
             </a-col>
         </a-row>
 
         <a-row>
             <a-col :span="24">
                 <div class="table-responsive">
-                    <a-table
-                        :columns="columns"
-                        :row-key="(record) => record.xid"
-                        :data-source="table.data"
-                        :pagination="table.pagination"
-                        :loading="table.loading"
-                        @change="handleTableChange"
-                        bordered
-                    >
+                    <a-table :columns="columns" :row-key="(record) => record.xid" :data-source="table.data"
+                        :pagination="table.pagination" :loading="table.loading" @change="handleTableChange" bordered>
                         <template #bodyCell="{ column, text, record }">
-                            <template
-                                v-if="
-                                    column.dataIndex === 'status' &&
-                                    record &&
-                                    record.details
-                                "
-                            >
-                                <a-popover
-                                    v-if="record.details.status == 'out_of_stock'"
-                                    placement="top"
-                                >
+                            <template v-if="column.dataIndex === 'status' &&
+                                record &&
+                                record.details
+                                ">
+                                <a-popover v-if="record.details.status == 'out_of_stock'" placement="top">
                                     <template #content>
                                         {{ $t("common.out_of_stock") }}
                                     </template>
@@ -156,8 +96,8 @@
                                     record.details &&
                                     record.details.warehouse &&
                                     record.details.warehouse.name
-                                        ? record.details.warehouse.name
-                                        : "-"
+                                    ? record.details.warehouse.name
+                                    : "-"
                                 }}
                             </template>
                             <template v-if="column.dataIndex === 'category_id'">
@@ -166,31 +106,22 @@
                             <template v-if="column.dataIndex === 'brand_id'">
                                 {{ record.brand ? record.brand.name : "-" }}
                             </template>
-                            <template
-                                v-if="
-                                    column.dataIndex === 'sales_price' &&
-                                    record &&
-                                    record.details
-                                "
-                            >
+                            <template v-if="column.dataIndex === 'sales_price' &&
+                                record &&
+                                record.details
+                                ">
                                 {{ formatAmountCurrency(record.details.sales_price) }}
                             </template>
-                            <template
-                                v-if="
-                                    column.dataIndex === 'purchase_price' &&
-                                    record &&
-                                    record.details
-                                "
-                            >
+                            <template v-if="column.dataIndex === 'purchase_price' &&
+                                record &&
+                                record.details
+                                ">
                                 {{ formatAmountCurrency(record.details.purchase_price) }}
                             </template>
-                            <template
-                                v-if="
-                                    column.dataIndex === 'current_stock' &&
-                                    record &&
-                                    record.details
-                                "
-                            >
+                            <template v-if="column.dataIndex === 'current_stock' &&
+                                record &&
+                                record.details
+                                ">
                                 {{
                                     `${record.details.current_stock} ${record.unit.short_name}`
                                 }}
@@ -198,27 +129,23 @@
                             <template v-if="column.dataIndex === 'action'">
                                 <a-space>
                                     <a-button @click="viewItem(record)" type="primary">
-                                        <template #icon><EyeOutlined /></template>
+                                        <template #icon>
+                                            <EyeOutlined />
+                                        </template>
                                     </a-button>
-                                    <a-button
-                                        v-if="
-                                            permsArray.includes('products_edit') ||
-                                            permsArray.includes('admin')
-                                        "
-                                        type="primary"
-                                        @click="editItem(record)"
-                                    >
-                                        <template #icon><EditOutlined /></template>
+                                    <a-button v-if="permsArray.includes('products_edit') ||
+                                        permsArray.includes('admin')
+                                        " type="primary" @click="editItem(record)">
+                                        <template #icon>
+                                            <EditOutlined />
+                                        </template>
                                     </a-button>
-                                    <a-button
-                                        v-if="
-                                            permsArray.includes('products_delete') ||
-                                            permsArray.includes('admin')
-                                        "
-                                        type="primary"
-                                        @click="showDeleteConfirm(record.xid)"
-                                    >
-                                        <template #icon><DeleteOutlined /></template>
+                                    <a-button v-if="permsArray.includes('products_delete') ||
+                                        permsArray.includes('admin')
+                                        " type="primary" @click="showDeleteConfirm(record.xid)">
+                                        <template #icon>
+                                            <DeleteOutlined />
+                                        </template>
                                     </a-button>
                                 </a-space>
                             </template>

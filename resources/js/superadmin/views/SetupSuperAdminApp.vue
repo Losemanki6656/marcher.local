@@ -1,10 +1,6 @@
 <template>
-    <a-alert
-        :message="$t('setup_superadmin_company.setup_not_completed')"
-        :description="$t('setup_superadmin_company.setup_not_completed_description')"
-        type="error"
-        show-icon
-    />
+    <a-alert :message="$t('setup_superadmin_company.setup_not_completed')"
+        :description="$t('setup_superadmin_company.setup_not_completed_description')" type="error" show-icon />
     <a-card class="setup-page-content-container">
         <a-row class="mt-40">
             <a-col :span="20" :offset="1">
@@ -49,24 +45,15 @@
                             {{ $t("currency.add") }}
                         </a-button>
 
-                        <CurrencyTable
-                            class="mb-40"
-                            ref="currencyTableRef"
-                            :showFilter="false"
-                            panelType="superadmin"
-                            @addOrEditSuccess="currencyAddSuccess"
-                        />
+                        <CurrencyTable class="mb-40" ref="currencyTableRef" :showFilter="false" panelType="superadmin"
+                            @addOrEditSuccess="currencyAddSuccess" />
                     </template>
                     <template v-if="currentStep == 1">
                         <WhiteLabelSetting />
                     </template>
                     <template v-if="currentStep == 2">
-                        <EditSetupSetting
-                            class="mb-40"
-                            ref="companySettingRef"
-                            :showSubmitButton="false"
-                            @updateSuccess="companySettingUpdated"
-                        />
+                        <EditSetupSetting class="mb-40" ref="companySettingRef" :showSubmitButton="false"
+                            @updateSuccess="companySettingUpdated" />
                     </template>
                 </template>
             </a-col>
@@ -74,46 +61,32 @@
     </a-card>
     <a-row>
         <a-col :span="20" :offset="1">
-            <div
-                :style="{
-                    position: 'absolute',
-                    right: 0,
-                    bottom: 0,
-                    width: '100%',
-                    borderTop: '1px solid #e9e9e9',
-                    padding: '10px 16px',
-                    background: '#fff',
-                    textAlign: 'left',
-                    zIndex: 1,
-                    marginBottom: '10px',
-                }"
-            >
+            <div :style="{
+                position: 'absolute',
+                right: 0,
+                bottom: 0,
+                width: '100%',
+                borderTop: '1px solid #e9e9e9',
+                padding: '10px 16px',
+                background: '#fff',
+                textAlign: 'left',
+                zIndex: 1,
+                marginBottom: '10px',
+            }">
                 <a-space>
-                    <a-button
-                        v-if="currentStep >= 1 && currentStep != 2"
-                        type="primary"
-                        :style="{ backgroundColor: '#faad14', border: '#faad14' }"
-                        @click="goBack"
-                    >
+                    <a-button v-if="currentStep >= 1 && currentStep != 2" type="primary"
+                        :style="{ backgroundColor: '#faad14', border: '#faad14' }" @click="goBack">
                         <DoubleLeftOutlined />
                         {{ $t("setup_superadmin_company.previous_step") }}
                     </a-button>
-                    <a-button
-                        v-if="currentStep < 2"
-                        type="primary"
-                        @click="goNext"
-                        :disabled="currentStep >= correctStep && currentStep != 1"
-                    >
+                    <a-button v-if="currentStep < 2" type="primary" @click="goNext"
+                        :disabled="currentStep >= correctStep && currentStep != 1">
                         {{ $t("setup_superadmin_company.next_step") }}
                         <DoubleRightOutlined />
                     </a-button>
-                    <a-button
-                        v-if="currentStep == 2 && companySettingRef"
-                        type="primary"
-                        :style="{ backgroundColor: '#52c41a', border: '#52c41a' }"
-                        @click="submitCompanySetting"
-                        :loading="companySettingRef.loading"
-                    >
+                    <a-button v-if="currentStep == 2 && companySettingRef" type="primary"
+                        :style="{ backgroundColor: '#52c41a', border: '#52c41a' }" @click="submitCompanySetting"
+                        :loading="companySettingRef.loading">
                         <SaveOutlined />
                         {{ $t("setup_superadmin_company.save_finish_setup") }}
                     </a-button>
@@ -122,13 +95,7 @@
         </a-col>
     </a-row>
 
-    <a-modal
-        v-model:visible="showFinalModal"
-        :maskClosable="false"
-        :closable="false"
-        :footer="null"
-        centered
-    >
+    <a-modal v-model:visible="showFinalModal" :maskClosable="false" :closable="false" :footer="null" centered>
         <a-result>
             <template #title>
                 <span v-if="setupCompleted" :style="{ color: '#7676e3' }">
@@ -143,30 +110,17 @@
                 <InfoCircleOutlined v-else />
             </template>
             <template #extra>
-                <a-button
-                    v-if="setupCompleted"
-                    type="primary"
-                    :style="{ backgroundColor: '#52c41a', border: '#52c41a' }"
-                    @click="goToDashboard"
-                >
+                <a-button v-if="setupCompleted" type="primary" :style="{ backgroundColor: '#52c41a', border: '#52c41a' }"
+                    @click="goToDashboard">
                     <HomeOutlined />
                     {{ $t("setup_superadmin_company.go_to_dashboard") }}
                 </a-button>
-                <SyncOutlined
-                    v-else
-                    :style="{ fontSize: '38px', color: '#5254cf' }"
-                    spin
-                />
+                <SyncOutlined v-else :style="{ fontSize: '38px', color: '#5254cf' }" spin />
             </template>
         </a-result>
     </a-modal>
 
-    <a-modal
-        v-model:visible="showConfirmWhiteLabelModal"
-        :maskClosable="false"
-        :footer="null"
-        centered
-    >
+    <a-modal v-model:visible="showConfirmWhiteLabelModal" :maskClosable="false" :footer="null" centered>
         <a-result>
             <template #title>
                 <span :style="{ color: '#7676e3' }">
@@ -178,22 +132,14 @@
             </template>
             <template #extra>
                 <a-space>
-                    <a-button
-                        type="primary"
-                        :style="{ backgroundColor: '#52c41a', border: '#52c41a' }"
-                        @click="
-                            () => {
-                                showConfirmWhiteLabelModal = false;
-                            }
-                        "
-                    >
+                    <a-button type="primary" :style="{ backgroundColor: '#52c41a', border: '#52c41a' }" @click="() => {
+                        showConfirmWhiteLabelModal = false;
+                    }
+                        ">
                         {{ $t("common.no") }}
                     </a-button>
-                    <a-button
-                        type="primary"
-                        :style="{ backgroundColor: '#ff4d4f', border: '#ff4d4f' }"
-                        @click="confirmWhiteLabel"
-                    >
+                    <a-button type="primary" :style="{ backgroundColor: '#ff4d4f', border: '#ff4d4f' }"
+                        @click="confirmWhiteLabel">
                         {{ $t("setup_superadmin_company.yes_uploaded") }}
                     </a-button>
                 </a-space>
@@ -324,7 +270,7 @@ export default defineComponent({
 
                     setupCompleted.value = true;
                 })
-                .catch(function (error) {});
+                .catch(function (error) { });
         };
 
         const goToDashboard = () => {
@@ -357,7 +303,7 @@ export default defineComponent({
                     currentStep.value =
                         currentStep.value >= 2 ? 2 : currentStep.value + 1;
                 })
-                .catch(function (error) {});
+                .catch(function (error) { });
         };
 
         return {
