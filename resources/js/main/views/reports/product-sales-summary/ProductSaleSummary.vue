@@ -60,7 +60,7 @@ export default defineComponent({
             }
 
             datatableVariables.tableUrl.value = {
-                url: "order-items?fields=id",
+                url: "order-items?fields=id,products{item_code}",
                 filters,
                 extraFilters: {
                     product_sales_summary: true,
