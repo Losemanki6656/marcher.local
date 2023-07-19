@@ -42,7 +42,7 @@ export default {
         const appChecking = computed(() => store.state.auth.appChecking);
 
         onMounted(() => {
-        
+
             if (
                 router.currentRoute &&
                 router.currentRoute.value &&

@@ -133,7 +133,7 @@ class AuthController extends ApiBaseController
             'warehouse' => $warehouse,
             'staffMember' => $staffMember
         ];
-
+        // dd($pdfData);
         $html = view('pdf', $pdfData);
 
         $pdf = app('dompdf.wrapper');
@@ -150,7 +150,7 @@ class AuthController extends ApiBaseController
         $email = "";
 
         $credentials = [
-            'password' =>  $request->password
+            'password' => $request->password
         ];
 
         if (is_numeric($request->get('email'))) {
@@ -401,8 +401,8 @@ class AuthController extends ApiBaseController
             $startDate = $dates[0];
             $endDate = $dates[1];
         } else {
-            $startDate =  Carbon::now()->subDays(30)->format("Y-m-d");
-            $endDate =  Carbon::now()->format("Y-m-d");
+            $startDate = Carbon::now()->subDays(30)->format("Y-m-d");
+            $endDate = Carbon::now()->format("Y-m-d");
         }
 
         // Sent Payments
@@ -436,7 +436,7 @@ class AuthController extends ApiBaseController
 
         // Iterate over the period
         foreach ($periodDates as $periodDate) {
-            $currentDate =  $periodDate->format('Y-m-d');
+            $currentDate = $periodDate->format('Y-m-d');
 
             if (isset($allSentPayments[$currentDate]) || isset($allReceivedPayments[$currentDate])) {
                 $datesArray[] = $currentDate;
@@ -613,8 +613,8 @@ class AuthController extends ApiBaseController
             $startDate = $dates[0];
             $endDate = $dates[1];
         } else {
-            $startDate =  Carbon::now()->subDays(30)->format("Y-m-d");
-            $endDate =  Carbon::now()->format("Y-m-d");
+            $startDate = Carbon::now()->subDays(30)->format("Y-m-d");
+            $endDate = Carbon::now()->format("Y-m-d");
         }
 
         $allPurchases = Order::select(DB::raw('date(orders.order_date) as date, sum(orders.total) as total_amount'))
@@ -649,7 +649,7 @@ class AuthController extends ApiBaseController
 
         // Iterate over the period
         foreach ($periodDates as $periodDate) {
-            $currentDate =  $periodDate->format('Y-m-d');
+            $currentDate = $periodDate->format('Y-m-d');
 
             if (isset($allPurchases[$currentDate]) || isset($sales[$currentDate])) {
                 $datesArray[] = $currentDate;
