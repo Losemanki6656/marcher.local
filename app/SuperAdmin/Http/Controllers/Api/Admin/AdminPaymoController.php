@@ -248,7 +248,7 @@ class AdminPaymoController extends ApiBaseController
 
                 return ApiResponse::make('Success', [
                     'success' => true,
-                    'message' => 'Payment successfully done.',
+                    'message' => 'Payment successfully done!',
                 ]);
 
                 return redirect(route('admin.subscription-plan.subscribe'));
