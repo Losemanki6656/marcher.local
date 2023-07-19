@@ -36,7 +36,7 @@ class OrderItemController extends ApiBaseController
             $query = $query->join('products', 'products.id', '=', 'order_items.product_id')
                 ->where('orders.order_type', 'sales')
                 ->groupBy('order_items.product_id')
-                ->selectRaw("order_items.product_id, products.item_code, sum(order_items.quantity) as unit_sold")
+                ->selectRaw("order_items.product_id,products.item_code,sum(order_items.quantity) as unit_sold")
                 ->with('product:id,name,image,unit_id', 'product.unit:id,name,short_name');
         }
 

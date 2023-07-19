@@ -19,7 +19,7 @@ class OrderItem extends BaseModel
 
     protected $appends = ['xid', 'x_order_id', 'x_user_id', 'x_product_id', 'x_unit_id', 'x_tax_id'];
 
-    protected $filterable = ['id', 'product_id'];
+    protected $filterable = ['id', 'product_id', 'products.item_code'];
 
     protected $casts = [
         'user_id' => Hash::class . ':hash',
