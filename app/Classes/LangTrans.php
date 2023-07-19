@@ -963,7 +963,7 @@ class LangTrans
             'product_is_upto_date' => 'You are on the latest version of app.',
             'new_app_version_avaialbe' => 'New app version {0} is available. Please update to get latest version.',
             'not_able_to_edit_order' => 'Only order status editable, other fields can not be editable becuase this order linked to some payments. Delete those payment(s) and try again.',
-            'click_here_to_download_sample_file' => 'Click here to download sample csv file',
+            'click_here_to_download_sample_file' => 'Click here to download sample excel file',
             'imported_successfully' => 'Imported Successfully',
             'company_admin_password_message' => 'Admin will login using this password. (Leave blank to keep current password)',
             'email_setting_not_configured' => 'Email setting not configured',
