@@ -68,7 +68,7 @@ export default defineComponent({
                 },
             };
             datatableVariables.hashable.value = [...hashableColumns];
-            datatableVariables.table.sorter = { field: "products.name", order: "asc" };
+            datatableVariables.table.sorter = { field: "product_id", order: "asc" };
             datatableVariables.exportDetails.value = {
                 allowExport: true,
                 exportType: "product_sales_summary_reports",
