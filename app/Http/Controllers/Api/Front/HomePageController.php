@@ -79,23 +79,23 @@ class HomePageController extends ApiBaseController
         $company = Company::find($warehouse->company_id);
 
         $credentials = [
-            'email' =>  $request->email,
-            'password' =>  $request->password,
+            'email' => $request->email,
+            'password' => $request->password,
             'user_type' => 'customers',
             'company_id' => $company->id,
         ];
         if (!$token = auth('api_front')->attempt($credentials)) {
             return
                 response()->json([
-                    'error_message' =>  __('auth.login_failed')
+                    'error_message' => __('auth.login_failed')
                 ], 406);
         } else if (auth('api_front')->user()->status == 'waiting') {
             response()->json([
-                'error_message' =>  __('auth.user_not_verified')
+                'error_message' => __('auth.user_not_verified')
             ], 406);
         } else if (auth('api_front')->user()->status == 'disabled') {
             response()->json([
-                'error_message' =>  __('auth.user_deactivated')
+                'error_message' => __('auth.user_deactivated')
             ], 406);
         } else
             return $this->respondWithToken($token);

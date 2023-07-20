@@ -2,6 +2,9 @@
 
 use Examyou\RestAPI\Facades\ApiRoute;
 
+
+ApiRoute::get('terms-conditions', ['uses' => 'App\Http\Controllers\Api\AuthController@terms']);
+
 // Admin Routes
 ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
     ApiRoute::get('all-langs', ['as' => 'api.extra.all-langs', 'uses' => 'AuthController@allEnabledLangs']);
@@ -104,7 +107,7 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
         ApiRoute::resource('stock-history', 'StockHistoryController', ['as' => 'api', 'only' => ['index']]);
         ApiRoute::resource('order-items', 'OrderItemController', ['as' => 'api', 'only' => ['index']]);
         ApiRoute::resource('roles', 'RolesController', $options);
-        ApiRoute::resource('warehouses', 'WarehouseController',  ['as' => 'api', 'except' => ['index']]);
+        ApiRoute::resource('warehouses', 'WarehouseController', ['as' => 'api', 'except' => ['index']]);
         ApiRoute::resource('custom-fields', 'CustomFieldController', $options);
         ApiRoute::resource('stock-adjustments', 'StockAdjustmentController', $options);
         ApiRoute::resource('purchases', 'PurchaseController', $options);

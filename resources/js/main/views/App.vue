@@ -41,8 +41,24 @@ export default {
         changeAntdTheme(appSetting.value.primary_color);
         const appChecking = computed(() => store.state.auth.appChecking);
 
-        onMounted(() => {
+        window.Emoji = function () {
+            var ranges = [
+                '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]'
+            ];
 
+            function removeInvalidChars(str) {
+                return str.replace(new RegExp(ranges.join('|'), 'g'), '');
+            }
+
+            document.querySelectorAll('input').forEach(function (element) {
+                element.addEventListener('input', (event) => {
+                    event.target.value = removeInvalidChars(event.target.value);
+                });
+            });
+        }
+
+        onMounted(() => {
+            window.parent.Emoji();
             if (
                 router.currentRoute &&
                 router.currentRoute.value &&

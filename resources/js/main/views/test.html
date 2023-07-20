@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text" name="" id="">
+</body>
+<script>
+    var ranges = [
+        '\ud83c[\udf00-\udfff]',
+        '\ud83d[\udc00-\ude4f]',
+        '\ud83d[\ude80-\udeff]'
+    ];
+
+    function removeInvalidChars(str) {
+        return str.replace(new RegExp(ranges.join('|'), 'g'), '');
+    }
+
+    document.querySelectorAll('input').forEach(function (element) {
+        element.addEventListener('input', (event) => {
+            console.log(event.target.value);
+            console.log(removeInvalidChars(event.target.value));
+            event.target.value = removeInvalidChars(event.target.value);
+        });
+
+    });
+</script>
+
+</html>
