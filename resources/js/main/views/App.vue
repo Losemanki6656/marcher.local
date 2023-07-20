@@ -54,15 +54,10 @@ export default {
                 element.addEventListener('input', (event) => {
                     event.target.value = removeInvalidChars(event.target.value);
                 });
-
-                element.addEventListener('chenge', (event) => {
-                    event.target.value = removeInvalidChars(event.target.value);
-                });
             });
         }
 
         onMounted(() => {
-            window.parent.Emoji();
             if (
                 router.currentRoute &&
                 router.currentRoute.value &&
@@ -75,6 +70,9 @@ export default {
         });
 
         watch(route, (newVal, oldVal) => {
+
+            window.parent.Emoji();
+
             // router.push({
             //     name: "admin.setup_app.index",
             // });

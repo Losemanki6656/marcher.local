@@ -194,6 +194,7 @@ class SuperAdminLangTrans
             'subscription_plan' => 'Subscription Plan',
             'plan_type' => 'Plan Type',
             'total' => 'Total',
+            'status' => 'Status',
             'no_date_selected' => 'No Date Selected',
         ],
         'website_settings' => [

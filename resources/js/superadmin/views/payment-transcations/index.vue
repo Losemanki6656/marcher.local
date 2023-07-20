@@ -23,26 +23,14 @@
                 <a-row :gutter="[15, 15]">
                     <a-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
                         <a-input-group compact>
-                            <a-select
-                                style="width: 25%"
-                                v-model:value="table.searchColumn"
-                                :placeholder="$t('common.select_default_text', [''])"
-                            >
-                                <a-select-option
-                                    v-for="filterableColumn in filterableColumns"
-                                    :key="filterableColumn.key"
-                                >
+                            <a-select style="width: 25%" v-model:value="table.searchColumn"
+                                :placeholder="$t('common.select_default_text', [''])">
+                                <a-select-option v-for="filterableColumn in filterableColumns" :key="filterableColumn.key">
                                     {{ filterableColumn.value }}
                                 </a-select-option>
                             </a-select>
-                            <a-input-search
-                                style="width: 75%"
-                                v-model:value="table.searchString"
-                                show-search
-                                @change="onTableSearch"
-                                @search="onTableSearch"
-                                :loading="table.filterLoading"
-                            />
+                            <a-input-search style="width: 75%" v-model:value="table.searchString" show-search
+                                @change="onTableSearch" @search="onTableSearch" :loading="table.filterLoading" />
                         </a-input-group>
                     </a-col>
                 </a-row>
@@ -52,15 +40,8 @@
         <a-row>
             <a-col :span="24">
                 <div class="table-responsive">
-                    <a-table
-                        :columns="columns"
-                        :row-key="(record) => record.xid"
-                        :data-source="table.data"
-                        :pagination="table.pagination"
-                        :loading="table.loading"
-                        @change="handleTableChange"
-                        bordered
-                    >
+                    <a-table :columns="columns" :row-key="(record) => record.xid" :data-source="table.data"
+                        :pagination="table.pagination" :loading="table.loading" @change="handleTableChange" bordered>
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.dataIndex === 'company'">
                                 {{ record.company.name }}
@@ -74,6 +55,10 @@
 
                             <template v-if="column.dataIndex === 'total'">
                                 {{ record.total }}
+                            </template>
+
+                            <template v-if="column.dataIndex === 'status'">
+                                {{ record.company.status }}
                             </template>
 
                             <template v-if="column.dataIndex === 'name'">

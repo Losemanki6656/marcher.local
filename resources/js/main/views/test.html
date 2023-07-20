@@ -12,9 +12,7 @@
 </body>
 <script>
     var ranges = [
-        '\ud83c[\udf00-\udfff]',
-        '\ud83d[\udc00-\ude4f]',
-        '\ud83d[\ude80-\udeff]'
+        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]'
     ];
 
     function removeInvalidChars(str) {
@@ -23,8 +21,6 @@
 
     document.querySelectorAll('input').forEach(function (element) {
         element.addEventListener('input', (event) => {
-            console.log(event.target.value);
-            console.log(removeInvalidChars(event.target.value));
             event.target.value = removeInvalidChars(event.target.value);
         });
 
