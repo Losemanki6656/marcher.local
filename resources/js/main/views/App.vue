@@ -54,6 +54,10 @@ export default {
                 element.addEventListener('input', (event) => {
                     event.target.value = removeInvalidChars(event.target.value);
                 });
+
+                element.addEventListener('chenge', (event) => {
+                    event.target.value = removeInvalidChars(event.target.value);
+                });
             });
         }
 
