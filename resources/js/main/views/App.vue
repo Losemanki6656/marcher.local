@@ -41,23 +41,30 @@ export default {
         changeAntdTheme(appSetting.value.primary_color);
         const appChecking = computed(() => store.state.auth.appChecking);
 
-        window.Emoji = function () {
-            var ranges = [
-                '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]'
-            ];
+        // window.Emoji = function () {
+        //     var ranges = [
+        //         '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]'
+        //     ];
 
-            function removeInvalidChars(str) {
-                return str.replace(new RegExp(ranges.join('|'), 'g'), '');
-            }
+        //     function removeInvalidChars(str) {
+        //         return str.replace(new RegExp(ranges.join('|'), 'g'), '');
+        //     }
 
-            document.querySelectorAll('input').forEach(function (element) {
-                element.addEventListener('input', (event) => {
-                    event.target.value = removeInvalidChars(event.target.value);
-                });
-            });
-        }
+        //     document.querySelectorAll('input').forEach(function (element) {
+
+        //         element.addEventListener('input', async (event) => {
+        //             event.target.value = removeInvalidChars(event.target.value);
+        //         });
+
+        //         // element.removeEventListener('input', handleEvent(), true)
+
+        //     });
+
+
+        // }
 
         onMounted(() => {
+
             if (
                 router.currentRoute &&
                 router.currentRoute.value &&
@@ -70,8 +77,6 @@ export default {
         });
 
         watch(route, (newVal, oldVal) => {
-
-            window.parent.Emoji();
 
             // router.push({
             //     name: "admin.setup_app.index",

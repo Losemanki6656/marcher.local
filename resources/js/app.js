@@ -1,5 +1,24 @@
 require('./common/plugins');
 
+window.Emoji = function () {
+    var ranges = [
+        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]'
+    ];
+
+    function removeInvalidChars(str) {
+        return str.replace(new RegExp(ranges.join('|'), 'g'), '');
+    }
+
+    document.querySelectorAll('input').forEach(function (element) {
+        element.addEventListener('input', (event) => {
+            element.value = removeInvalidChars(event.target.value);
+        });
+
+        // element.removeEventListener('input', handleEvent(), true)
+
+    });
+}
+
 import { createApp } from 'vue';
 import Antd from 'ant-design-vue';
 import PerfectScrollbar from 'vue3-perfect-scrollbar';
@@ -11,11 +30,14 @@ import { setupI18n, loadLocaleMessages } from './common/i18n';
 import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css';
 import VueBarcode from '@chenfengyuan/vue-barcode';
 import print from 'vue3-print-nb';
-import {VueRestrictedInputDirective} from 'vue-restricted-input';
+import { VueRestrictedInputDirective } from 'vue-restricted-input';
 
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 // import VueSimpleAlert from "vue-simple-alert";
+
+// import AInput from './main/components/custom/AInput'
+
 
 async function bootstrap() {
     if (store.getters["auth/isLoggedIn"]) {
@@ -45,6 +67,8 @@ async function bootstrap() {
     app.use(VueSweetalert2);
     // app.use(VueSimpleAlert);
 
+
+    // app.component('a-input', AInput);
     app.component(VueBarcode.name, VueBarcode);
 
     const allModules = window.config.installed_modules;
@@ -70,7 +94,6 @@ async function bootstrap() {
     })
 
 }
-
 
 bootstrap();
 

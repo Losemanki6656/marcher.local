@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, reactive, ref, computed } from "vue";
+import { defineComponent, onMounted, onUnmounted, reactive, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import common from "../../../common/composable/common";
@@ -86,6 +86,11 @@ export default defineComponent({
         onMounted(() => {
             window.parent.Emoji();
         });
+
+        onUnmounted(() => {
+            // window.parent.Emoji();
+        });
+
 
         const onSubmit = () => {
             onRequestSend.value = {
