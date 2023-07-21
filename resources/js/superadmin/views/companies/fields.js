@@ -53,6 +53,10 @@ const fields = () => {
             dataIndex: "status",
         },
         {
+            title: t("company.licence_expire_on"),
+            dataIndex: "licence_expire_on",
+        },
+        {
             title: t("common.action"),
             dataIndex: "action",
         },

@@ -20,7 +20,7 @@ class Company extends BaseModel
 
     protected $default = ['xid'];
 
-    protected $guarded = ['id', 'is_global', 'subscription_plan_id', 'payment_transcation_id', 'licence_expire_on', 'package_type', 'stripe_id', 'trial_ends_at',  'created_at', 'updated_at'];
+    protected $guarded = ['id', 'is_global', 'subscription_plan_id', 'payment_transcation_id', 'licence_expire_on', 'package_type', 'stripe_id', 'trial_ends_at', 'created_at', 'updated_at'];
 
     protected $hidden = ['id', 'currency_id', 'warehouse_id', 'lang_id', 'admin_id', 'subscription_plan_id', 'payment_transcation_id', 'updated_at'];
 

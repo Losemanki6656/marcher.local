@@ -29,6 +29,14 @@ class CompanyController extends ApiBaseController
     protected $updateRequest = UpdateRequest::class;
     protected $deleteRequest = DeleteRequest::class;
 
+    public function modifyIndex($query)
+    {
+        // $query = $query->withoutGlobalScope(CompanyScope::class)
+        //     ->allTranscations();
+
+        return $query;
+    }
+
     public function storing(Company $company)
     {
         $company->verified = 0;
@@ -69,12 +77,14 @@ class CompanyController extends ApiBaseController
 
     public function updating(Company $company)
     {
-        if (env('APP_ENV') == 'production' && $company->email == 'company@example.com' && ($company->isDirty('name') ||
-            $company->isDirty('short_name') || $company->isDirty('light_logo') ||
-            $company->isDirty('dark_logo') || $company->isDirty('small_dark_logo') ||
-            $company->isDirty('small_light_logo') || $company->isDirty('app_debug') ||
-            $company->isDirty('update_app_notification') || $company->isDirty('app_debug')
-        )) {
+        if (
+            env('APP_ENV') == 'production' && $company->email == 'company@example.com' && ($company->isDirty('name') ||
+                $company->isDirty('short_name') || $company->isDirty('light_logo') ||
+                $company->isDirty('dark_logo') || $company->isDirty('small_dark_logo') ||
+                $company->isDirty('small_light_logo') || $company->isDirty('app_debug') ||
+                $company->isDirty('update_app_notification') || $company->isDirty('app_debug')
+            )
+        ) {
             throw new ApiException('Not Allowed In Demo Mode');
         }
 
