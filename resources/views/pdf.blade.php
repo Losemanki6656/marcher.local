@@ -432,11 +432,11 @@
                         <div class="status-due">
                             <div>
                                 <h4>{{ $traslations['payment_status'] }} : {{ $paymentStatusText }}</h4>
-                                <span>{{ $traslations['paid_amount'] }} :
-                                    {{ App\Classes\Common::formatAmountCurrency($company->currency, $order->paid_amount) }}</span>
-                                <span>{{ $traslations['due_amount'] }}:
-                                    {{ App\Classes\Common::formatAmountCurrency($company->currency, $order->due_amount) }}</span>
-                                <span class="paid">
+                                <b>{{ $traslations['paid_amount'] }} :
+                                    {{ App\Classes\Common::formatAmountCurrency($company->currency, $order->paid_amount) }}</b>
+                                <b>{{ $traslations['due_amount'] }}:
+                                    {{ App\Classes\Common::formatAmountCurrency($company->currency, $order->due_amount) }}</b>
+                                <b class="paid">
                                     {{ $traslations['payment_mode'] }}:
                                     @if ($order->orderPayments)
                                         @foreach ($order->orderPayments as $currentOrderPayment)
@@ -451,7 +451,7 @@
                                     @else
                                         -
                                     @endif
-                                </span>
+                                </b>
                             </div>
                         </div>
                     </td>
@@ -463,22 +463,22 @@
 
 
                                     <tr class="item-four">
-                                        <td>{{ $traslations['subtotal'] }}</td>
+                                        <td><b>{{ $traslations['subtotal'] }}</b></td>
                                         <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $order->subtotal) }}
                                         </td>
                                     </tr>
                                     <tr class="item-four">
-                                        <td>{{ $traslations['tax'] }}</td>
+                                        <td><b>{{ $traslations['tax'] }}</b></td>
                                         <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $order->tax_amount) }}
                                             ({{ $order->tax_rate }}%)</td>
                                     </tr>
                                     <tr class="item-four">
-                                        <td>{{ $traslations['discount'] }}</td>
+                                        <td><b>{{ $traslations['discount'] }}</b></td>
                                         <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $order->discount) }}
                                         </td>
                                     </tr>
                                     <tr class="item-four">
-                                        <td>{{ $traslations['shipping'] }}</td>
+                                        <td><b>{{ $traslations['shipping'] }}</b></td>
                                         <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $order->shipping) }}
                                         </td>
                                     </tr>
