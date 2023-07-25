@@ -355,11 +355,11 @@
         <table class="information" cellpadding="4px" cellspacing="0" style="border: 1px solid #a9a9a9;">
             <tr class="heading">
                 <td style="width: 40%; padding: 12px;">
-                    Seller
+                    {{ $traslations['Seller'] }}
                 </td>
                 <td style="width: 20%"></td>
                 <td style="width: 40%; padding-left: 15px;">
-                    Buyer
+                    {{ $traslations['Buyer'] }}
                 </td>
             </tr>
             <tr>
@@ -507,7 +507,7 @@
             <div style="width: 30%; float: right;">
                 <div class="signertuer">
                     <div>
-                        <span>Authorized person</span>
+                        <span>{{ $traslations['Authorized_person'] }} </span>
                         <img src="{{ $warehouse->signature_url }}" style="width: 200px; margin-top: 5px;" />
                         </span>
                     </div>
@@ -525,7 +525,7 @@
                     <p>{{ $warehouse->terms_condition }}</p>
                 </td>
                 <td style="width: 50%; vertical-align:top;">
-                    <span style="font-weight: bold;">Bank Details</span>
+                    <span style="font-weight: bold;">{{ $traslations['Bank_Details'] }} </span>
                     <p>{{ $warehouse->bank_details }}</p>
                 </td>
             </tr>

@@ -158,6 +158,7 @@ class LangTrans
             'payment_modes' => 'Payment Modes',
             'units' => 'Units',
             'login' => 'Login',
+            'or_register' => 'Or Register',
             'logout' => 'Logout',
             'reports' => 'Reports',
             'order_payments' => 'Order Payments',

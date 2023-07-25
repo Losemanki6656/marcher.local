@@ -17,11 +17,10 @@
                                 <a-form-item :label="$t('user.email_phone')" name="email"
                                     :help="rules.email ? rules.email.message : null"
                                     :validateStatus="rules.email ? 'error' : null">
-                                    <a-input v-model:value="credentials.email" type="text" @pressEnter="onSubmit"
-                                        :placeholder="$t('common.placeholder_default_text', [
-                                            $t('user.email_phone'),
-                                        ])
-                                            " />
+                                    <a-input v-model:value="credentials.email" type="text" :placeholder="$t('common.placeholder_default_text', [
+                                        $t('user.email_phone'),
+                                    ])
+                                        " />
                                 </a-form-item>
 
                                 <a-form-item :label="$t('user.password')" name="password"
@@ -38,6 +37,13 @@
                                     <a-button :loading="loading" @click="onSubmit" class="login-btn" block>
                                         {{ $t("menu.login") }}
                                     </a-button>
+                                </a-form-item>
+
+                                <a-form-item class="mt-30">
+                                    <a href="/register" type="button" block
+                                        style="width: 100%; align-content: center; align-items: center; text-align: center;">
+                                        {{ $t("menu.or_register") }}
+                                    </a>
                                 </a-form-item>
                             </a-form>
                             <DemoCredentials :credentials="credentials" />
@@ -83,14 +89,9 @@ export default defineComponent({
             success: "",
         });
 
-        onMounted(() => {
-            window.parent.Emoji();
-        });
+        const register = () => {
 
-        onUnmounted(() => {
-            // window.parent.Emoji();
-        });
-
+        };
 
         const onSubmit = () => {
             onRequestSend.value = {
@@ -173,14 +174,21 @@ export default defineComponent({
             rules,
             credentials,
             onSubmit,
+            register,
             onRequestSend,
             globalSetting,
             loginBackground,
-
             innerWidth: window.innerWidth,
         };
     },
+
+    mounted() {
+        window.parent.Emoji();
+    },
+
 });
+
+
 </script>
 
 <style lang="less">
@@ -237,6 +245,15 @@ export default defineComponent({
 .login-btn:active {
     background: #5254cf !important;
     border-color: #5254cf !important;
+    border-radius: 5px;
+    color: #fff !important;
+}
+
+.register-btn,
+.register-btn:hover,
+.register-btn:active {
+    background: #56cf52 !important;
+    border-color: #56cf52 !important;
     border-radius: 5px;
     color: #fff !important;
 }

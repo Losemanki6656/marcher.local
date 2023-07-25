@@ -10,12 +10,21 @@ window.Emoji = function () {
     }
 
     document.querySelectorAll('input').forEach(function (element) {
+        element.removeEventListener('blur', (e) => {
+            console.log(1);
+        });
+        element.removeEventListener('focus', (e) => {
+            console.log(1);
+        });
+        element.removeEventListener('input', (e) => {
+            console.log(1);
+        });
+    });
+
+    document.querySelectorAll('input').forEach(function (element) {
         element.addEventListener('input', (event) => {
             element.value = removeInvalidChars(event.target.value);
         });
-
-        // element.removeEventListener('input', handleEvent(), true)
-
     });
 }
 
@@ -72,6 +81,7 @@ async function bootstrap() {
     app.component(VueBarcode.name, VueBarcode);
 
     const allModules = window.config.installed_modules;
+
     allModules.forEach((allModule) => {
         const moduleName = allModule.verified_name;
         const pluginModule = require(`../../Modules/${moduleName}/Resources/assets/js/index`).default;
