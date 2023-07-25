@@ -1007,6 +1007,10 @@ class LangTrans
             'thanks_message' => 'Thank You For Shopping With Us. Please Come Again',
             'quotation_invoice' => 'Quotation Invoice',
             'terms_condition' => 'Terms & Conditions',
+            'Seller' => 'Seller',
+            'Buyer' => 'Buyer',
+            'Authorized_person' => 'Authorized person',
+            'Bank_Details' => 'Bank Details',
         ],
         'front' => [
             'home' => 'Home',
