@@ -434,8 +434,9 @@
                                 <h4>{{ $traslations['payment_status'] }} : {{ $paymentStatusText }}</h4>
                                 <b>{{ $traslations['paid_amount'] }} :
                                     {{ App\Classes\Common::formatAmountCurrency($company->currency, $order->paid_amount) }}</b>
+                                <br>
                                 <b>{{ $traslations['due_amount'] }}:
-                                    {{ App\Classes\Common::formatAmountCurrency($company->currency, $order->due_amount) }}</b>
+                                    {{ App\Classes\Common::formatAmountCurrency($company->currency, $order->due_amount) }}</b><br>
                                 <b class="paid">
                                     {{ $traslations['payment_mode'] }}:
                                     @if ($order->orderPayments)
