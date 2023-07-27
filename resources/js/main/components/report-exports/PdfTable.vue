@@ -38,7 +38,7 @@ export default {
             pdf.text(props.title, 14, 9);
 
             pdf.autoTable({
-                html: `#${props.tableName} table`, font: 'DejaVuSans', columnStyles: { 0: { font: 'DejaVuSans' }, 2: { font: 'DejaVuSans' }, 3: { font: 'DejaVuSans' }, 6: { font: 'DejaVuSans' }, 7: { font: 'DejaVuSans' } }
+                html: `#${props.tableName} table`, styles: { font: 'DejaVuSans' }, font: 'DejaVuSans', columnStyles: { 0: { font: 'DejaVuSans' }, 2: { font: 'DejaVuSans' }, 3: { font: 'DejaVuSans' }, 6: { font: 'DejaVuSans' }, 7: { font: 'DejaVuSans' } }
             });
 
             pdf.save(`${props.tableName}.pdf`);
